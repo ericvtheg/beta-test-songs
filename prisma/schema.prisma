@@ -15,10 +15,9 @@ model Song {
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @default(now()) @updatedAt
   link             String
+  email            String
   review           Review?
   abandonedReviews AbandonedReview[]
-  user             User              @relation(fields: [userId], references: [id])
-  userId           Int
 }
 
 model Review {
@@ -30,8 +29,6 @@ model Review {
   liked       Boolean?
   song        Song      @relation(fields: [songId], references: [id])
   songId      Int       @unique
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
 }
 
 model AbandonedReview {
@@ -40,16 +37,4 @@ model AbandonedReview {
   updatedAt DateTime @default(now()) @updatedAt
   song      Song     @relation(fields: [songId], references: [id])
   songId    Int      @unique
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-}
-
-model User {
-  id               Int               @id @default(autoincrement())
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @default(now()) @updatedAt
-  email            String
-  review           Review[]
-  abandonedReviews AbandonedReview[]
-  Song             Song[]
 }
