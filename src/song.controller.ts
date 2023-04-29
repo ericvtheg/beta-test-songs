@@ -30,19 +30,23 @@ export class SongController {
   async startReview(): Promise<Song> {
     const userId = 1;
 
+    // TODO would like to retry here 3 times
+    // that way in the case of a race condition of someone stealing a song
+    // a song will still be fetched (not scalable)
     const songs = await this.prisma.$queryRaw<Song[]>`
         WITH "toReviewSong" AS (
           SELECT "Song"."id", "Song"."link", "Song"."updatedAt", "Song"."createdAt", "Song"."userId"
           FROM "Song" 
           LEFT join "Review" ON "Review"."songId" = "Song"."id"
-          WHERE "Review"."id" IS null
+          WHERE "Review"."id" IS NULL
             AND "Song"."userId" != ${userId}
           ORDER BY "Song"."createdAt" ASC
           LIMIT 1
         ), "inserted" AS (
           INSERT INTO "Review" ("songId", "userId")
-          SELECT "Song"."id", "Song"."userId"
-          FROM "Song" 
+          SELECT "toReviewSong"."id", "toReviewSong"."userId"
+          FROM "toReviewSong" 
+          WHERE "toReviewSong"."id" IS NOT NULL
         )
         SELECT *
         FROM "toReviewSong";
