@@ -8,7 +8,13 @@ import {
   Post,
 } from '@nestjs/common';
 import { Song, Review } from '@prisma/client';
+import { IsInt } from 'class-validator';
 import { PrismaService } from './prisma.service';
+
+class StartReviewDto {
+  @IsInt()
+  userId: number;
+}
 
 @Controller('song')
 export class SongController {
@@ -18,7 +24,6 @@ export class SongController {
   async getSong(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<Song & { review: Review | null }> {
-    // this should also join on review
     const song = await this.prisma.song.findUnique({
       where: { id },
       include: { review: true },
@@ -32,9 +37,7 @@ export class SongController {
   }
 
   @Post('/start-review')
-  async startReview(@Body() { userId }: { userId: number }): Promise<Song> {
-    // TODO validate body
-
+  async startReview(@Body() { userId }: StartReviewDto): Promise<Song> {
     // TODO would like to retry here 3 times
     // that way in the case of a race condition of someone stealing a song
     // a song will still be fetched (not scalable)
