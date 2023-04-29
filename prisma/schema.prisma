@@ -11,14 +11,45 @@ datasource db {
 }
 
 model Song {
-  id       Int     @id @default(autoincrement())
-  link     String
-  review   Review? @relation(fields: [reviewId], references: [id])
-  reviewId Int?
+  id               Int               @id @default(autoincrement())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
+  link             String
+  review           Review?
+  abandonedReviews AbandonedReview[]
+  user             User              @relation(fields: [userId], references: [id])
+  userId           Int
 }
 
 model Review {
-  id   Int    @id @default(autoincrement())
-  text String
-  Song Song[]
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+  completedAt DateTime?
+  text        String?
+  liked       Boolean?
+  song        Song      @relation(fields: [songId], references: [id])
+  songId      Int       @unique
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+model AbandonedReview {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  song      Song     @relation(fields: [songId], references: [id])
+  songId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model User {
+  id               Int               @id @default(autoincrement())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @default(now()) @updatedAt
+  email            String
+  review           Review[]
+  abandonedReviews AbandonedReview[]
+  Song             Song[]
 }
