@@ -7,17 +7,22 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import { Song } from '@prisma/client';
+import { Song, Review } from '@prisma/client';
 import { PrismaService } from './prisma.service';
 
 @Controller('song')
 export class SongController {
   constructor(private readonly prisma: PrismaService) {}
 
-  @Get('/:id')
-  async getSong(@Param('id', ParseIntPipe) id: number): Promise<Song> {
+  @Get('id/:id')
+  async getSong(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Song & { review: Review | null }> {
     // this should also join on review
-    const song = await this.prisma.song.findUnique({ where: { id } });
+    const song = await this.prisma.song.findUnique({
+      where: { id },
+      include: { review: true },
+    });
 
     if (!song) {
       throw new NotFoundException();
@@ -27,8 +32,8 @@ export class SongController {
   }
 
   @Post('/start-review')
-  async startReview(): Promise<Song> {
-    const userId = 1;
+  async startReview(@Body() { userId }: { userId: number }): Promise<Song> {
+    // TODO validate body
 
     // TODO would like to retry here 3 times
     // that way in the case of a race condition of someone stealing a song
@@ -37,14 +42,14 @@ export class SongController {
         WITH "toReviewSong" AS (
           SELECT "Song"."id", "Song"."link", "Song"."updatedAt", "Song"."createdAt", "Song"."userId"
           FROM "Song" 
-          LEFT join "Review" ON "Review"."songId" = "Song"."id"
+          LEFT JOIN "Review" ON "Review"."songId" = "Song"."id"
           WHERE "Review"."id" IS NULL
             AND "Song"."userId" != ${userId}
           ORDER BY "Song"."createdAt" ASC
           LIMIT 1
         ), "inserted" AS (
           INSERT INTO "Review" ("songId", "userId")
-          SELECT "toReviewSong"."id", "toReviewSong"."userId"
+          SELECT "toReviewSong"."id", ${userId}
           FROM "toReviewSong" 
           WHERE "toReviewSong"."id" IS NOT NULL
         )
