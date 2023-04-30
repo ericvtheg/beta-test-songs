@@ -8,7 +8,6 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import { Song as PrismaSong, Review as PrismaReview } from '@prisma/client';
 import {
   IsBoolean,
   IsEmail,
@@ -154,11 +153,14 @@ export class SongController {
   async submitReview(@Body() payload: SubmitReviewDto): Promise<IReview> {
     const { text, liked, reviewId } = payload;
 
-    // This should only be update-able by the person that "owns" the review
+    // This isn't great. I think it'd be solved by having user accounts
+    // Theoretically someone can abandon a review then update it later while someone else is working on it
+    // This can also currently be updated multiple times
     const review = await this.prisma.review.update({
       data: {
         text,
         liked,
+        completedAt: new Date(),
       },
       where: {
         id: reviewId,
