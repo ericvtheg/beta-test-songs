@@ -27,6 +27,7 @@ model Review {
   completedAt DateTime?
   text        String?
   liked       Boolean?
+  email       String?
   song        Song      @relation(fields: [songId], references: [id])
   songId      Int       @unique
 }
