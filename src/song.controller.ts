@@ -15,6 +15,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { EmailService } from './email.service';
 import { PrismaService } from './prisma.service';
 
 class StartReviewDto {
@@ -60,7 +61,10 @@ interface IReview {
 
 @Controller('song')
 export class SongController {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly email: EmailService,
+  ) {}
 
   @Get('id/:id')
   async getSong(@Param('id', ParseIntPipe) id: number): Promise<ISong> {
@@ -168,6 +172,8 @@ export class SongController {
     });
 
     // TODO triggers email notification to song poster
+    await this.email.send();
+
     return {
       id: review.id,
       completedAt: review.completedAt,
