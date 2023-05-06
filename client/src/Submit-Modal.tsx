@@ -1,5 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 
 interface SubmitSongData {
@@ -7,30 +8,27 @@ interface SubmitSongData {
   email: string | null;
 }
 
-function submitSong(data: SubmitSongData) {
-  axios
-    .post("http://localhost:3000/song/submit-song", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    .then((response) => alert(response)) //TODO should call to action to review track
-    .catch((err) => console.error(err));
-}
-
-interface SubmitModalProps {
-  isOpen: boolean;
-  openOrCloseModal: () => void;
-}
-
-export default function SubmitModal({
-  isOpen,
-  openOrCloseModal,
-}: SubmitModalProps) {
+export default function SubmitModal() {
   const [songData, setSongData] = useState<SubmitSongData>({
     link: null,
     email: null,
   });
+
+  const navigate = useNavigate();
+
+  const submitSong = (data: SubmitSongData) => {
+    axios
+      .post("http://localhost:3000/song/submit-song", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => { 
+        alert(response);
+        navigate('/');
+      }) //TODO should call to action to review track
+      .catch((err) => console.error(err));
+  }
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -45,8 +43,8 @@ export default function SubmitModal({
   };
 
   return (
-    <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={openOrCloseModal}>
+    <Transition appear show={true} as={Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={() => {navigate('/');}}>
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -94,7 +92,7 @@ export default function SubmitModal({
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="link"
                       >
-                        Song Link 
+                        Track Link
                       </label>
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
