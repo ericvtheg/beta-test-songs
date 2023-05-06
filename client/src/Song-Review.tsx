@@ -5,6 +5,7 @@ import axios from "axios";
 
 interface ReviewSongData {
   text: string;
+  reviewId: number | null;
   trackId: number | null;
   trackLink: string | null;
 }
@@ -12,6 +13,7 @@ interface ReviewSongData {
 export default function ReviewModal() {
   const [reviewData, setReviewData] = useState<ReviewSongData>({
     text: "",
+    reviewId: null,
     trackId: null,
     trackLink: null,
   });
@@ -28,7 +30,8 @@ export default function ReviewModal() {
       setReviewData({
         trackId: id,
         trackLink: link,
-        text: review.text
+        text: review.text,
+        reviewId: review.id,
       })
     }
     fetchTrackData();
@@ -90,7 +93,7 @@ export default function ReviewModal() {
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Leave some constructive criticism.
+                    Check out the Track and leave some constructive criticism.
                   </p>
                 </div>
 
@@ -107,8 +110,8 @@ export default function ReviewModal() {
                         Track Link
                       </label>
                       <div className="mt-2">
-                        <div className="flex px-1.5 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md overflow-auto">
-                          <span className="flex select items-center pl-3 text-gray-500 sm:text-sm">
+                        <div className="flex px-1.5 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <span className="flex select items-center pl-2 text-gray-500 sm:text-sm">
                             {reviewData.trackLink ?? "Loading..."}
                           </span>
                           {/* <input
