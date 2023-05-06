@@ -183,8 +183,8 @@ export class SongController {
     };
   }
 
-  @Post('/request-review')
-  async requestReview(@Body() payload: RequestReviewDto): Promise<void> {
+  @Post('/submit-song')
+  async submitSong(@Body() payload: RequestReviewDto): Promise<void> {
     const { link, email } = payload;
     await this.prisma.song.create({
       data: {
