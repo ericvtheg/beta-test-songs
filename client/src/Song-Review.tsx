@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Bars } from "react-loading-icons";
 
 interface ReviewSongData {
   text: string;
@@ -20,20 +21,23 @@ export default function ReviewModal() {
 
   useEffect(() => {
     const fetchTrackData = async () => {
-      const response = await axios
-        .post("http://localhost:3000/song/start-review", {}, {
+      const response = await axios.post(
+        "http://localhost:3000/song/start-review",
+        {},
+        {
           headers: {
             "Content-Type": "application/json",
           },
-        })
-      const {id, link, review } = response.data;
+        }
+      );
+      const { id, link, review } = response.data;
       setReviewData({
         trackId: id,
         trackLink: link,
         text: review.text,
         reviewId: review.id,
-      })
-    }
+      });
+    };
     fetchTrackData();
   }, []);
 
@@ -89,69 +93,17 @@ export default function ReviewModal() {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Review a Track
+                  Fetching a Track
                 </Dialog.Title>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    Check out the Track and leave some constructive criticism.
-                  </p>
-                </div>
-
-                <div className="w-full max-w-md">
-                  <form
-                    className="bg-white px-4 pt-6 pb-4 mb-4"
-                    onSubmit={() => ""}
-                  >
-                    <div className="sm:col-span-4 mb-4">
-                      <label
-                        htmlFor="username"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Track Link
-                      </label>
-                      <div className="mt-2">
-                        <div className="flex px-1.5 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                          <span className="flex select items-center pl-2 text-gray-500 sm:text-sm">
-                            {reviewData.trackLink ?? "Loading..."}
-                          </span>
-                          {/* <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            autoComplete="username"
-                            className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                            placeholder={reviewData.trackLink ?? "Loading..."}
-                            disabled={true}
-                          /> */}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-span-full mb-4">
-                      <label
-                        htmlFor="about"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Review
-                      </label>
-                      <div className="mt-2">
-                        <textarea
-                          id="about"
-                          name="about"
-                          rows={5}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          defaultValue={""}
-                          onChange={handleChange}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex float-right justify-between">
-                      <input
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit"
-                        value="Submit"
-                      />
-                    </div>
-                  </form>
+                <div className="flex flex-col">
+                  <div>
+                    <Bars fill="#4f46e5" className="m-auto w-20" speed={1} />
+                  </div>
+                  <div className="m-auto">
+                    <h6 className="text-gray-500">
+                      We&#39;re getting the next track in the review queue...
+                    </h6>
+                  </div>
                 </div>
               </Dialog.Panel>
             </Transition.Child>
