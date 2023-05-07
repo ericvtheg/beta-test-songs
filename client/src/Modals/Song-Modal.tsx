@@ -63,10 +63,10 @@ export default function SongModal() {
         setReviewData({
           trackId: id,
           trackLink: link,
-          text: review.text,
+          text: review.text ?? "",
           reviewId: review.id,
         });
-        setReviewCompleted(true);
+        setReviewCompleted(review.text !== null);
       };
       fetchTrackData();
     }
