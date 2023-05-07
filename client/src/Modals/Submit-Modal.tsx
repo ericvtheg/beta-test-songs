@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface SubmitSongData {
@@ -16,19 +16,18 @@ export default function SubmitModal() {
 
   const navigate = useNavigate();
 
-  const submitSong = (data: SubmitSongData) => {
+  const submitSong = () => {
     axios
-      .post("http://localhost:3000/song/submit-song", data, {
+      .post("http://localhost:3000/song/submit-song", songData, {
         headers: {
           "Content-Type": "application/json",
         },
       })
-      .then((response) => { 
-        alert(response);
-        navigate('/');
+      .then((response) => {
+        navigate("/success");
       }) //TODO should call to action to review track
       .catch((err) => console.error(err));
-  }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -44,7 +43,13 @@ export default function SubmitModal() {
 
   return (
     <Transition appear show={true} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={() => {navigate('/');}}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        onClose={() => {
+          navigate("/");
+        }}
+      >
         <Transition.Child
           as={Fragment}
           enter="ease-out duration-300"
@@ -85,7 +90,10 @@ export default function SubmitModal() {
                 <div className="w-full max-w-sm">
                   <form
                     className="bg-white px-4 pt-6 pb-4 mb-4"
-                    onSubmit={() => submitSong(songData)}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      submitSong();
+                    }}
                   >
                     <div className="mb-4">
                       <label

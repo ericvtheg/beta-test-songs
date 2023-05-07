@@ -147,8 +147,8 @@ export default function SongModal() {
                         Track Link
                       </label>
                       <div className="mt-2">
-                        <div className="flex px-1.5 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-                          <span className="flex select items-center pl-2 text-gray-500 sm:text-sm">
+                        <div className="flex  rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                          <span className="flex select items-center pl-2 text-gray-900 sm:text-sm">
                             {reviewData?.trackLink ?? "Loading..."}
                           </span>
                           {/* <input
