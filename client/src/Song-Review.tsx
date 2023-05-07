@@ -12,14 +12,10 @@ interface ReviewSongData {
 }
 
 export default function ReviewModal() {
-  const [reviewData, setReviewData] = useState<ReviewSongData>({
-    text: "",
-    reviewId: null,
-    trackId: null,
-    trackLink: null,
-  });
+  const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(navigate);
     const fetchTrackData = async () => {
       const response = await axios.post(
         "http://localhost:3000/song/start-review",
@@ -31,30 +27,17 @@ export default function ReviewModal() {
         }
       );
       const { id, link, review } = response.data;
-      setReviewData({
-        trackId: id,
-        trackLink: link,
-        text: review.text,
-        reviewId: review.id,
+      navigate(`/song/${id}`, {
+        state: {
+          trackId: id,
+          trackLink: link,
+          text: review.text,
+          reviewId: review.id,
+        },
       });
     };
     fetchTrackData();
   }, []);
-
-  const navigate = useNavigate();
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { id, value } = e.target;
-    setReviewData(() => ({
-      ...reviewData,
-      [id]: value,
-    }));
-    return;
-  };
 
   return (
     <Transition appear show={true} as={Fragment}>

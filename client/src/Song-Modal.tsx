@@ -10,7 +10,7 @@ interface ReviewSongData {
   trackLink: string | null;
 }
 
-export default function ReviewModal() {
+export default function SongModal() {
   const [reviewData, setReviewData] = useState<ReviewSongData>({
     text: "",
     reviewId: null,
