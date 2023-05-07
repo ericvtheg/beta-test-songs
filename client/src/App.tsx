@@ -1,6 +1,6 @@
-import Home from "./Home";
+import Home from "./Pages";
 import ReviewModal from "./Song-Review";
-import PageNotFound from "./404";
+import PageNotFound from "./Pages/404";
 import {
   Route,
   createBrowserRouter,

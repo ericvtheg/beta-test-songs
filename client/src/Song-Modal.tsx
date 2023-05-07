@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 
 interface ReviewSongData {
@@ -18,26 +18,30 @@ export default function SongModal() {
     trackLink: null,
   });
 
+  const { state }: { state: ReviewSongData } = useLocation();
+  const { songId } = useParams();
+
   useEffect(() => {
-    const fetchTrackData = async () => {
-      const response = await axios
-        .post("http://localhost:3000/song/start-review", {}, {
+    if (state) {
+      setReviewData(state);
+    } else {
+      const fetchTrackData = async () => {
+        const response = await axios.get(`http://localhost:3000/song/id/${songId}`, {
           headers: {
             "Content-Type": "application/json",
           },
+        });
+        const { id, link, review } = response.data;
+        setReviewData({
+          trackId: id,
+          trackLink: link,
+          text: review.text,
+          reviewId: review.id,
         })
-      const {id, link, review } = response.data;
-      setReviewData({
-        trackId: id,
-        trackLink: link,
-        text: review.text,
-        reviewId: review.id,
-      })
+      };
+      fetchTrackData();
     }
-    fetchTrackData();
   }, []);
-
-  const navigate = useNavigate();
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -112,7 +116,7 @@ export default function SongModal() {
                       <div className="mt-2">
                         <div className="flex px-1.5 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                           <span className="flex select items-center pl-2 text-gray-500 sm:text-sm">
-                            {reviewData.trackLink ?? "Loading..."}
+                            {reviewData?.trackLink ?? "Loading..."}
                           </span>
                           {/* <input
                             type="text"
