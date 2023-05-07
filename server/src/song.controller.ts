@@ -172,7 +172,7 @@ export class SongController {
     });
 
     // TODO triggers email notification to song poster
-    await this.email.send();
+    // await this.email.send();
 
     return {
       id: review.id,
