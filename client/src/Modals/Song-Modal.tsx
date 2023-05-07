@@ -2,6 +2,8 @@ import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useLocation, useParams } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface ReviewSongData {
   text: string;
@@ -116,15 +118,22 @@ export default function SongModal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white pl-6 pb-6 text-left align-middle shadow-xl transition-all">
+              <div className="flex flex-row-reverse">
+                  <Link to="/" className="">
+                    <div className="px-2 pt-2">
+                      <XMarkIcon className="h-5 w-6 text-gray-900 hover:text-gray-600" />
+                    </div>
+                  </Link>
+                </div>
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
+                  className="text-lg font-medium leading-6 text-gray-900 pr-6"
                 >
                   {isReviewCompleted ? "Track Review" : "Review a Track"}
                 </Dialog.Title>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-gray-500 pr-6">
                     {isReviewCompleted
                       ? "Check out the Track's review."
                       : "Check out the Track and leave some constructive criticism."}
