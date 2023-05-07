@@ -1,9 +1,8 @@
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 export default function SuccessModal() {
   const navigate = useNavigate();
