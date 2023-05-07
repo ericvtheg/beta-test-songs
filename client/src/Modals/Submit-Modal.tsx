@@ -112,10 +112,10 @@ export default function SubmitModal() {
                         Track Link
                       </label>
                       <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
                         id="link"
                         type="text"
-                        placeholder="soundcloud.com/xxxx"
+                        placeholder="soundcloud.com/your-unlisted-track"
                         onChange={handleChange}
                         required
                       />
@@ -128,7 +128,7 @@ export default function SubmitModal() {
                         Email
                       </label>
                       <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                         id="email"
                         type="email"
                         placeholder="your@email.com"
