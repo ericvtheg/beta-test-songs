@@ -24,8 +24,7 @@ export default function Home() {
               Beta Test Your Tracks Here
             </h2>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              Fight ear fatigue by getting unbiased feedback from like-minded
-              producers.
+              Fight ear fatigue by getting unbiased feedback from producers.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Link to="/submit">
