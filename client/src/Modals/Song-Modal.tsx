@@ -25,7 +25,7 @@ export default function SongModal() {
     state?.text !== ""
   );
 
-  const submitReview = async (reviewData: ReviewSongData) => {
+  const submitReview = async () => {
     const { text, reviewId } = reviewData;
     const response = await axios.post(
       `http://localhost:3000/song/submit-review`,
@@ -82,7 +82,6 @@ export default function SongModal() {
       ...reviewData,
       [id]: value,
     }));
-    return;
   };
 
   return (
@@ -137,7 +136,7 @@ export default function SongModal() {
                     className="bg-white px-4 pt-6 pb-4 mb-4"
                     onSubmit={(e) => {
                       e.preventDefault();
-                      submitReview(reviewData);
+                      submitReview();
                     }}
                   >
                     <div className="sm:col-span-4 mb-4">
@@ -173,7 +172,7 @@ export default function SongModal() {
                       </label>
                       <div className="mt-2">
                         {isReviewCompleted ? (
-                          <p className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 whitespace-pre-wrap">
+                          <p className="block w-full rounded-md border-0 pl-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 whitespace-pre-wrap">
                             {reviewData?.text}
                           </p>
                         ) : (
@@ -181,7 +180,7 @@ export default function SongModal() {
                             id="text"
                             name="text"
                             rows={5}
-                            className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                            className={`block w-full rounded-md border-0 pl-2 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
                             onChange={handleChange}
                           />
                         )}

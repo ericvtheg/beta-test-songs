@@ -78,7 +78,7 @@ export default function SubmitModal() {
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
                     Once you submit your track it'll be put into a review queue.
-                    You'll be emailed once it's been reviewed.
+                    You'll be emailed once the review is complete.
                   </p>
                 </div>
 
