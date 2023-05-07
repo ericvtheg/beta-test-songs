@@ -43,8 +43,8 @@ export default function SuccessModal() {
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="flex flex-row-reverse">
                   <Link to="/" className="">
-                    <div className="p-3">
-                      <XMarkIcon className="h-5 w-5 text-gray-900 hover:text-gray-600" />
+                    <div className="px-2 pt-2">
+                      <XMarkIcon className="h-5 w-6 text-gray-900 hover:text-gray-600" />
                     </div>
                   </Link>
                 </div>
