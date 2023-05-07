@@ -1,17 +1,10 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Bars } from "react-loading-icons";
 
-interface ReviewSongData {
-  text: string;
-  reviewId: number | null;
-  trackId: number | null;
-  trackLink: string | null;
-}
-
-export default function ReviewModal() {
+export default function FetchReviewModal() {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +30,7 @@ export default function ReviewModal() {
       });
     };
     fetchTrackData();
-  }, []);
+  }, []); // should I add navigate to dependency array?
 
   return (
     <Transition appear show={true} as={Fragment}>
