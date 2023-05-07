@@ -19,25 +19,54 @@ export default function SongModal() {
   });
 
   const { state }: { state: ReviewSongData } = useLocation();
-  const { songId } = useParams();
+  const { trackId } = useParams();
+
+  const [isReviewCompleted, setReviewCompleted] = useState<boolean>(
+    state?.text !== ""
+  );
+
+  const submitReview = async (reviewData: ReviewSongData) => {
+    const { text, reviewId } = reviewData;
+    const response = await axios.post(
+      `http://localhost:3000/song/submit-review`,
+      {
+        text,
+        liked: true,
+        reviewId,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    setReviewCompleted(true);
+
+    // reset navigator cache
+    window.history.replaceState({}, document.title);
+  };
 
   useEffect(() => {
     if (state) {
       setReviewData(state);
     } else {
       const fetchTrackData = async () => {
-        const response = await axios.get(`http://localhost:3000/song/id/${songId}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.get(
+          `http://localhost:3000/song/id/${trackId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const { id, link, review } = response.data;
         setReviewData({
           trackId: id,
           trackLink: link,
           text: review.text,
           reviewId: review.id,
-        })
+        });
+        setReviewCompleted(true);
       };
       fetchTrackData();
     }
@@ -93,18 +122,23 @@ export default function SongModal() {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Review a Track
+                  {isReviewCompleted ? "Track Review" : "Review a Track"}
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">
-                    Check out the Track and leave some constructive criticism.
+                    {isReviewCompleted
+                      ? "Check out the Track's review."
+                      : "Check out the Track and leave some constructive criticism."}
                   </p>
                 </div>
 
                 <div className="w-full max-w-md">
                   <form
                     className="bg-white px-4 pt-6 pb-4 mb-4"
-                    onSubmit={() => ""}
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      submitReview(reviewData);
+                    }}
                   >
                     <div className="sm:col-span-4 mb-4">
                       <label
@@ -132,29 +166,38 @@ export default function SongModal() {
                     </div>
                     <div className="col-span-full mb-4">
                       <label
-                        htmlFor="about"
+                        htmlFor="text"
                         className="block text-sm font-medium leading-6 text-gray-900"
                       >
                         Review
                       </label>
                       <div className="mt-2">
-                        <textarea
-                          id="about"
-                          name="about"
-                          rows={5}
-                          className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                          defaultValue={""}
-                          onChange={handleChange}
-                        />
+                        {isReviewCompleted ? (
+                          <p className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 whitespace-pre-wrap">
+                            {reviewData?.text}
+                          </p>
+                        ) : (
+                          <textarea
+                            id="text"
+                            name="text"
+                            rows={5}
+                            className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
+                            onChange={handleChange}
+                          />
+                        )}
                       </div>
                     </div>
-                    <div className="flex float-right justify-between">
-                      <input
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit"
-                        value="Submit"
-                      />
-                    </div>
+                    {isReviewCompleted ? (
+                      ""
+                    ) : (
+                      <div className="flex float-right justify-between">
+                        <input
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                          type="submit"
+                          value="Submit"
+                        />
+                      </div>
+                    )}
                   </form>
                 </div>
               </Dialog.Panel>

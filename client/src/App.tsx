@@ -17,7 +17,7 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="submit" element={<SubmitModal />} />
       <Route path="review" element={<FetchReviewModal />} />
-      <Route path="song/:songId" element={<SongModal />} />
+      <Route path="track/:trackId" element={<SongModal />} />
       <Route path="*" element={<PageNotFound />} />
     </Route>
   )

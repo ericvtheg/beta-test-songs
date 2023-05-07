@@ -8,7 +8,6 @@ export default function FetchReviewModal() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(navigate);
     const fetchTrackData = async () => {
       const response = await axios.post(
         "http://localhost:3000/song/start-review",
@@ -20,11 +19,11 @@ export default function FetchReviewModal() {
         }
       );
       const { id, link, review } = response.data;
-      navigate(`/song/${id}`, {
+      navigate(`/track/${id}`, {
         state: {
           trackId: id,
           trackLink: link,
-          text: review.text,
+          text: review.text ?? "",
           reviewId: review.id,
         },
       });
