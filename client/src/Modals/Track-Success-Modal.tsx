@@ -4,7 +4,7 @@ import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function SuccessModal() {
+export default function TrackSuccessModal() {
   const navigate = useNavigate();
 
   return (

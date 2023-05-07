@@ -26,7 +26,7 @@ export default function SubmitModal() {
         },
       })
       .then((response) => {
-        navigate("/success");
+        navigate("/track-success");
       }) //TODO should call to action to review track
       .catch((err) => console.error(err));
   };
