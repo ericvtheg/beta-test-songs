@@ -8,7 +8,7 @@ export default function TrackSuccessModal() {
   const navigate = useNavigate();
 
   return (
-    <Transition.Root show={true} as={Fragment}>
+    <Transition.Root appear show={true} as={Fragment}>
       <Dialog
         as="div"
         className="relative z-10"
