@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Bars } from "react-loading-icons";
 
 export default function FetchReviewModal() {
@@ -9,26 +9,40 @@ export default function FetchReviewModal() {
 
   useEffect(() => {
     const fetchTrackData = async () => {
-      const response = await axios.post(
-        "http://localhost:3000/song/start-review",
-        {},
-        {
-          headers: {
-            "Content-Type": "application/json",
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/song/start-review",
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const { id, link, review } = response.data;
+        navigate(`/track/${id}`, {
+          state: {
+            trackId: id,
+            trackLink: link,
+            text: review.text ?? "",
+            reviewId: review.id,
           },
+        });
+      } catch (err: unknown | AxiosError) {
+        if (axios.isAxiosError(err)) {
+          if (err?.response?.status === 404) {
+            navigate("/no-tracks-available");
+          }
+        } else {
+          // TODO handle error
         }
-      );
-      const { id, link, review } = response.data;
-      navigate(`/track/${id}`, {
-        state: {
-          trackId: id,
-          trackLink: link,
-          text: review.text ?? "",
-          reviewId: review.id,
-        },
-      });
+      }
     };
-    fetchTrackData();
+    try {
+      fetchTrackData();
+    } catch (err) {
+      console.log("hit", err);
+    }
   }, []); // should I add navigate to dependency array?
 
   return (
