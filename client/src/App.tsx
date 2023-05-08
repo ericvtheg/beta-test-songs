@@ -11,6 +11,7 @@ import PageNotFound from "./Pages/404";
 import SubmitModal from "./Modals/Submit-Modal";
 import SongModal from "./Modals/Song-Modal";
 import TrackSuccessModal from "./Modals/Track-Success-Modal";
+import ReviewSuccessModal from "./Modals/Review-Success-Modal";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
       <Route path="review" element={<FetchReviewModal />} />
       <Route path="track/:trackId" element={<SongModal />} />
       <Route path="track-success" element={<TrackSuccessModal />} />
+      <Route path="review-success" element={<ReviewSuccessModal />} />
       <Route path="*" element={<PageNotFound />} />
     </Route>
   )

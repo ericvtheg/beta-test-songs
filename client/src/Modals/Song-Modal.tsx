@@ -1,6 +1,6 @@
 import { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
@@ -22,6 +22,7 @@ export default function SongModal() {
 
   const { state }: { state: ReviewSongData } = useLocation();
   const { trackId } = useParams();
+  const navigate = useNavigate();
 
   const [isReviewCompleted, setReviewCompleted] = useState<boolean>(
     state?.text !== ""
@@ -46,6 +47,8 @@ export default function SongModal() {
 
     // reset navigator cache
     window.history.replaceState({}, document.title);
+
+    navigate("/review-success")
   };
 
   useEffect(() => {
