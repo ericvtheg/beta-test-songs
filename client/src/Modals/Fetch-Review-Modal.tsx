@@ -1,7 +1,7 @@
 import { Fragment, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
-import axios, { AxiosError } from "axios";
+import axios, { type AxiosError } from "axios";
 import { Bars } from "react-loading-icons";
 
 export default function FetchReviewModal() {
