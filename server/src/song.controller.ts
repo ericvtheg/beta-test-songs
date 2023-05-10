@@ -180,8 +180,8 @@ export class SongController {
       },
     });
 
-    // TODO triggers email notification to song poster
-    // await this.email.send();
+    // triggers email notification to song poster
+    await this.email.notifyOfReviewCompleted();
 
     return {
       id: review.id,

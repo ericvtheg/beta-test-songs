@@ -1,19 +1,18 @@
 import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { SongController } from './song.controller';
-import { SESClient } from '@aws-sdk/client-ses';
-import { EmailService } from './email/email.service';
+import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from './email/email.module';
 
 @Module({
-  imports: [],
-  controllers: [SongController],
-  providers: [
-    PrismaService,
-    {
-      provide: SESClient,
-      useValue: new SESClient({ region: 'us-east-2' }),
-    },
-    EmailService,
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+      isGlobal: true,
+    }),
+    EmailModule,
   ],
+  controllers: [SongController],
+  providers: [PrismaService],
 })
 export class AppModule {}

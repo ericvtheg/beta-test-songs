@@ -1,15 +1,20 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { Injectable } from '@nestjs/common';
 
+interface IEmailParams {
+  toAddress: string;
+  link: string;
+}
+
 @Injectable()
 export class EmailService {
   constructor(private readonly ses: SESClient) {}
 
-  async send(): Promise<void> {
+  async notifyOfReviewCompleted(): Promise<void> {
     const command = new SendEmailCommand({
       Destination: { ToAddresses: ['test@gmail.com'] },
       Message: {
-        Subject: { Data: 'test subject' },
+        Subject: { Data: 'Your Track has been reviewed!' },
         Body: { Text: { Data: 'test body' }, Html: { Data: 'test html' } },
       },
       Source: 'someemail@gmail.com',
