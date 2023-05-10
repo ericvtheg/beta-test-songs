@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="bg-white">
       <div className="relative isolate px-6 pt-14 lg:px-8">
-        <div className="mx-auto max-w-2xl py-24 sm:py-36 lg:py-36">
+        <div className="mx-auto max-w-2xl py-32 sm:py-36">
           {/* <div className="hidden sm:mb-8 sm:flex sm:justify-center">
               <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                 Announcing our next round of funding.{' '}
@@ -16,16 +16,16 @@ export default function Home() {
               </div>
             </div> */}
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="text-6xl font-bold tracking-tight text-gray-900 sm:text-8xl">
               EDM Artists
             </h1>
-            <h2 className="text-large font-bold tracking-tight text-gray-900 sm:text-2xl">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Beta Test Your Tracks Here
             </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-4 text-lg leading-8 text-gray-600">
               Fight ear fatigue by getting unbiased feedback from producers.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-5 flex items-center justify-center gap-x-6">
               <Link to="/submit">
                 <button
                   type="button"
