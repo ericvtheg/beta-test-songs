@@ -30,9 +30,6 @@ class SubmitReviewDto {
 
   @IsString()
   text: string;
-
-  @IsBoolean()
-  liked: boolean;
 }
 
 class RequestReviewDto {
@@ -48,14 +45,13 @@ interface ISong {
   createdAt: Date;
   link: string;
   email: string;
-  review: IReview | null;
+  review: IReview[];
 }
 
 interface IReview {
   id: number;
   completedAt: Date | null;
   text: string | null;
-  liked: boolean | null;
   email: string | null;
 }
 
@@ -70,7 +66,17 @@ export class SongController {
   async getSong(@Param('id', ParseIntPipe) id: number): Promise<ISong> {
     const song = await this.prisma.song.findUnique({
       where: { id },
-      include: { review: true },
+      include: {
+        review: {
+          orderBy: {
+            completedAt: 'desc',
+          },
+          where: {
+            NOT: { completedAt: null },
+          },
+          take: 1,
+        },
+      },
     });
 
     if (!song) {
@@ -82,15 +88,14 @@ export class SongController {
       email: song.email,
       link: song.link,
       createdAt: song.createdAt,
-      review: song.review
-        ? {
-            id: song.review.id,
-            completedAt: song.review.completedAt,
-            text: song.review.text,
-            liked: song.review.liked,
-            email: song.review.email,
-          }
-        : null,
+      review: song.review,
+      // ? {
+      //     id: song.review.id,
+      //     completedAt: song.review.completedAt,
+      //     text: song.review.text,
+      //     email: song.review.email,
+      //   }
+      // : null,
     };
   }
 
@@ -101,22 +106,45 @@ export class SongController {
     // a song will still be fetched (not scalable)
     const queryResult = await this.prisma.$queryRaw<{ id: number }[]>`
         WITH "toReviewSong" AS (
-          SELECT "Song"."id"
-          FROM "Song" 
-          LEFT JOIN "Review" ON "Review"."songId" = "Song"."id"
-          WHERE "Review"."id" IS NULL
+          SELECT
+            "Song"."id"
+          FROM
+            "Song"
+            LEFT JOIN "Review" ON "Review"."songId" = "Song"."id"
+          WHERE
+            (
+              "Review"."id" IS NULL
+              OR (
+                now() :: timestamp - (
+                  SELECT
+                    MAX("Review"."createdAt")
+                  FROM
+                    "Review"
+                  WHERE
+                    "Review"."songId" = "Song"."id"
+                    AND "Review"."completedAt" IS NULL
+                ) > interval '1 hour'
+              )
+            )
             AND "Song"."email" != ${email ?? ''}
-          ORDER BY "Song"."createdAt" ASC
-          LIMIT 1
+          ORDER BY
+            "Song"."createdAt" ASC
+          LIMIT
+            1
         ), "inserted" AS (
-          INSERT INTO "Review" ("songId", "email")
-          SELECT "toReviewSong"."id", ${email}
-          FROM "toReviewSong" 
-          WHERE "toReviewSong"."id" IS NOT NULL
+          INSERT INTO
+            "Review" ("songId", "email")
+          SELECT
+            "toReviewSong"."id", ${email}
+          FROM
+            "toReviewSong"
+          WHERE
+            "toReviewSong"."id" IS NOT NULL
         )
-        SELECT 
+        SELECT
           "toReviewSong"."id"
-        FROM "toReviewSong";
+        FROM
+          "toReviewSong";
       `;
 
     if (queryResult.length === 0) {
@@ -129,7 +157,17 @@ export class SongController {
 
     const song = await this.prisma.song.findUnique({
       where: { id },
-      include: { review: true },
+      include: {
+        review: {
+          orderBy: {
+            completedAt: 'desc',
+          },
+          where: {
+            NOT: { completedAt: null },
+          },
+          take: 1,
+        },
+      },
     });
 
     if (!song || !song.review) {
@@ -141,21 +179,13 @@ export class SongController {
       email: song.email,
       link: song.link,
       createdAt: song.createdAt,
-      review: song.review
-        ? {
-            id: song.review.id,
-            completedAt: song.review.completedAt,
-            text: song.review.text,
-            liked: song.review.liked,
-            email: song.review.email,
-          }
-        : null,
+      review: song.review,
     };
   }
 
   @Post('/submit-review')
   async submitReview(@Body() payload: SubmitReviewDto): Promise<IReview> {
-    const { text, liked, reviewId } = payload;
+    const { text, reviewId } = payload;
 
     // This isn't great. I think it'd be solved by having user accounts
     // Theoretically someone can abandon a review then update it later while someone else is working on it
@@ -163,7 +193,6 @@ export class SongController {
     const review = await this.prisma.review.update({
       data: {
         text,
-        liked,
         completedAt: new Date(),
       },
       where: {
@@ -178,7 +207,6 @@ export class SongController {
       id: review.id,
       completedAt: review.completedAt,
       text: review.text,
-      liked: review.liked,
       email: review.email,
     };
   }
@@ -194,6 +222,3 @@ export class SongController {
     });
   }
 }
-
-// TODO a cron that runs every minute and deletes abandoned reviews
-// and moves them to abandoned reviews table
