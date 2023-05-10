@@ -8,13 +8,7 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import {
-  IsBoolean,
-  IsEmail,
-  IsInt,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
 import { EmailService } from './email.service';
 import { PrismaService } from './prisma.service';
 
@@ -55,6 +49,15 @@ interface IReview {
   email: string | null;
 }
 
+interface ISongIncompleteReview {
+  id: number;
+  link: string;
+  review: {
+    id: number;
+    text: null;
+  };
+}
+
 @Controller('song')
 export class SongController {
   constructor(
@@ -89,25 +92,19 @@ export class SongController {
       link: song.link,
       createdAt: song.createdAt,
       review: song.review,
-      // ? {
-      //     id: song.review.id,
-      //     completedAt: song.review.completedAt,
-      //     text: song.review.text,
-      //     email: song.review.email,
-      //   }
-      // : null,
     };
   }
 
   @Post('/start-review')
-  async startReview(@Body() { email }: StartReviewDto): Promise<ISong> {
-    // TODO would like to retry here 3 times
-    // that way in the case of a race condition of someone stealing a song
-    // a song will still be fetched (not scalable)
-    const queryResult = await this.prisma.$queryRaw<{ id: number }[]>`
+  async startReview(
+    @Body() { email }: StartReviewDto,
+  ): Promise<ISongIncompleteReview> {
+    const queryResult = await this.prisma.$queryRaw<
+      { songId: number; link: string; reviewId: number; text: null }[]
+    >`
         WITH "toReviewSong" AS (
           SELECT
-            "Song"."id"
+            "Song"."id", "Song"."link"
           FROM
             "Song"
             LEFT JOIN "Review" ON "Review"."songId" = "Song"."id"
@@ -140,46 +137,30 @@ export class SongController {
             "toReviewSong"
           WHERE
             "toReviewSong"."id" IS NOT NULL
+          RETURNING "id", "text"
         )
         SELECT
-          "toReviewSong"."id"
+          "toReviewSong"."id" as "songId", "toReviewSong"."link" as "link", 
+            "inserted"."id" as "reviewId", "inserted"."text" as "text"
         FROM
-          "toReviewSong";
+          "toReviewSong", "inserted";
       `;
 
     if (queryResult.length === 0) {
       throw new NotFoundException(
-        'No songs available to review at the moment :(',
+        'No tracks available to review at the moment :(',
       );
     }
 
-    const { id } = queryResult[0];
-
-    const song = await this.prisma.song.findUnique({
-      where: { id },
-      include: {
-        review: {
-          orderBy: {
-            completedAt: 'desc',
-          },
-          where: {
-            NOT: { completedAt: null },
-          },
-          take: 1,
-        },
-      },
-    });
-
-    if (!song || !song.review) {
-      throw new InternalServerErrorException();
-    }
+    const { songId, link, reviewId, text } = queryResult[0];
 
     return {
-      id: song.id,
-      email: song.email,
-      link: song.link,
-      createdAt: song.createdAt,
-      review: song.review,
+      id: songId,
+      link,
+      review: {
+        id: reviewId,
+        text,
+      },
     };
   }
 
