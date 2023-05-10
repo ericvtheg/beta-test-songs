@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { SongController } from './song.controller';
 import { SESClient } from '@aws-sdk/client-ses';
-import { EmailService } from './email.service';
+import { EmailService } from './email/email.service';
 
 @Module({
   imports: [],

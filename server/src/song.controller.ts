@@ -2,14 +2,13 @@ import {
   Body,
   Controller,
   Get,
-  InternalServerErrorException,
   NotFoundException,
   Param,
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
 import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
-import { EmailService } from './email.service';
+import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
 
 class StartReviewDto {
