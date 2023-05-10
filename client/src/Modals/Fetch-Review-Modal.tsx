@@ -34,7 +34,8 @@ export default function FetchReviewModal() {
             navigate("/no-tracks-available");
           }
         } else {
-          // TODO handle error
+          console.error("err");
+          navigate("/");
         }
       }
     };

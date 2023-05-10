@@ -30,25 +30,30 @@ export default function SongModal() {
 
   const submitReview = async () => {
     const { text, reviewId } = reviewData;
-    const response = await axios.post(
-      `http://localhost:3000/song/submit-review`,
-      {
-        text,
-        liked: true,
-        reviewId,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/song/submit-review`,
+        {
+          text,
+          liked: true,
+          reviewId,
         },
-      }
-    );
-    setReviewCompleted(true);
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setReviewCompleted(true);
 
-    // reset navigator cache
-    window.history.replaceState({}, document.title);
+      // reset navigator cache
+      window.history.replaceState({}, document.title);
 
-    navigate("/review-success")
+      navigate("/review-success");
+    } catch (err) {
+      console.error(err);
+      navigate("/");
+    }
   };
 
   useEffect(() => {
@@ -56,22 +61,27 @@ export default function SongModal() {
       setReviewData(state);
     } else {
       const fetchTrackData = async () => {
-        const response = await axios.get(
-          `http://localhost:3000/song/id/${trackId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const { id, link, review } = response.data;
-        setReviewData({
-          trackId: id,
-          trackLink: link,
-          text: review.text ?? "",
-          reviewId: review.id,
-        });
-        setReviewCompleted(review.text !== null);
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/song/id/${trackId}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const { id, link, review } = response.data;
+          setReviewData({
+            trackId: id,
+            trackLink: link,
+            text: review.text ?? "",
+            reviewId: review.id,
+          });
+          setReviewCompleted(review.text !== null);
+        } catch (err) {
+          console.error("err");
+          navigate("/");
+        }
       };
       fetchTrackData();
     }
@@ -122,7 +132,7 @@ export default function SongModal() {
               leaveTo="opacity-0 scale-95"
             >
               <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white pl-2 md:pl-8 pb-6 text-left align-middle shadow-xl transition-all">
-              <div className="flex flex-row-reverse">
+                <div className="flex flex-row-reverse">
                   <Link to="/" className="">
                     <div className="px-2 pt-2">
                       <XMarkIcon className="h-5 w-6 text-gray-900 hover:text-gray-600" />
