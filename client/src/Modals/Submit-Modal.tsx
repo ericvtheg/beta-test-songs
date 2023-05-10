@@ -18,17 +18,21 @@ export default function SubmitModal() {
 
   const navigate = useNavigate();
 
-  const submitSong = () => {
-    axios
-      .post("http://localhost:3000/song/submit-song", songData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        navigate("/track-success");
-      }) //TODO should call to action to review track
-      .catch((err) => console.error(err));
+  const submitSong = async () => {
+    try {
+      await axios.post(
+        "http://localhost:3000/song/submit-song",
+        songData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      navigate("/track-success");
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const handleChange = (
