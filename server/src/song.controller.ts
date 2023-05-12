@@ -178,10 +178,16 @@ export class SongController {
       where: {
         id: reviewId,
       },
+      include: {
+        song: true,
+      },
     });
 
     // triggers email notification to song poster
-    await this.email.notifyOfReviewCompleted();
+    await this.email.notifyOfReviewCompleted({
+      email: review.song.email,
+      songId: review.song.id,
+    });
 
     return {
       id: review.id,

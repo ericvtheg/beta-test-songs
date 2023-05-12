@@ -1,0 +1,26 @@
+<mjml>
+  <mj-head>
+    <mj-font name="Inter" href="https://fonts.googleapis.com/css?family=Inter" />
+  </mj-head>
+
+  <mj-body background-color="#4F46E5">
+    <mj-section padding="10px 0px"></mj-section>
+    <mj-section background-color="#f0f0f0">
+      <mj-column>
+        <mj-text align="center" font-family="Helvetica" font-size="20px" color="#626262">
+          Beta Test Songs
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-hero mode="fluid-height" background-width="600px" background-height="400px" background-color="#fafafa" padding="100px 0px">
+      <mj-text padding="20px" color="#000000" font-family="Helvetica" align="center" font-size="45px" line-height="45px" font-weight="900">
+        Your Track Has Been Reviewed
+      </mj-text>
+      <mj-button href="{{review_link}}" background-color="#4F46E5" font-family="Helvetica" align="center" font-size="20px" href="#">See the Review</mj-button>
+    </mj-hero>
+    <mj-section background-color="#f0f0f0">
+      <mj-column>
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>
