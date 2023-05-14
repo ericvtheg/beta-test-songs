@@ -51,6 +51,35 @@ resource "aws_cloudwatch_log_group" "beta-test-songs-log-group" {
   retention_in_days = 14
 }
 
+### RDS 
+
+resource "aws_db_subnet_group" "beta-test-songs-db-subnet-group" {
+  name = "${local.prefix}-db-subnet-group"
+  subnet_ids = module.vpc.private_subnets
+}
+
+resource "aws_db_instance" "beta-test-songs-rds" {
+  depends_on = [module.vpc, resource.aws_db_subnet_group.beta-test-songs-db-subnet-group]
+
+  allocated_storage                     = 5
+  max_allocated_storage                 = 20
+  allow_major_version_upgrade           = false
+  identifier                            = "${local.prefix}-${var.stage}"
+  availability_zone                     = var.azs[0]
+  engine                                = "postgres"
+  engine_version                        = "14.4"
+  instance_class                        = "db.t4g.micro"
+  skip_final_snapshot                   = true
+  performance_insights_enabled          = true
+  performance_insights_retention_period = 7
+
+  # db_name  = var.db_name
+  # username = var.db_username
+  # password = var.db_password
+
+  db_subnet_group_name = aws_db_subnet_group.beta-test-songs-db-subnet-group.name
+}
+
 ### ECR
 resource "aws_ecr_repository" "beta-test-songs-ecr" {
   name                 = "${local.prefix}-repo-${var.stage}"
@@ -234,7 +263,6 @@ resource "aws_acm_certificate" "beta-test-songs-cert" {
 }
 
 ### Route53
-
 resource "aws_route53_record" "www-beta-test-songs" {
   zone_id = var.zone_id
   name    = var.domain_name
