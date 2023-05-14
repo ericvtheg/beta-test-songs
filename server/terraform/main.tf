@@ -14,17 +14,6 @@ module "vpc" {
   one_nat_gateway_per_az = true
 }
 
-### ECR
-resource "aws_ecr_repository" "beta-test-songs-ecr" {
-  name                 = "${local.prefix}-repo-${var.stage}"
-  image_tag_mutability = "MUTABLE"
-  force_delete         = true
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
 ### IAM
 resource "aws_iam_role" "ecs_agent" {
   name               = "${local.prefix}-execution-task-role"
@@ -57,9 +46,79 @@ resource "aws_iam_instance_profile" "ecs_agent" {
 }
 
 ### Cloudwatch
-
 resource "aws_cloudwatch_log_group" "beta-test-songs-log-group" {
   name              = "${local.prefix}-${var.stage}-logs"
   retention_in_days = 14
+}
 
+### ECR
+resource "aws_ecr_repository" "beta-test-songs-ecr" {
+  name                 = "${local.prefix}-repo-${var.stage}"
+  image_tag_mutability = "MUTABLE"
+  force_delete         = true
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
+### Autoscaling
+
+# AMI
+data "aws_ami" "aws_optimized_ecs" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn-ami*amazon-ecs-optimized"]
+  }
+
+  filter {
+    name   = "architecture"
+    values = ["x86_64"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["591542846629"] # AWS
+}
+
+resource "aws_launch_configuration" "beta-test-songs-launch-config" {
+  name_prefix          = "${local.prefix}-${var.stage}-launch-config-"
+  image_id             = data.aws_ami.aws_optimized_ecs.id
+  instance_type        = "t3.micro"
+  iam_instance_profile = aws_iam_instance_profile.ecs_agent.arn
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  user_data = <<EOF
+#!/bin/bash
+echo ECS_CLUSTER=${local.prefix}-${var.stage}-cluster >> /etc/ecs/ecs.config
+EOF
+
+  # key_name = "eric"
+}
+
+resource "aws_autoscaling_group" "beta-test-songs-asg" {
+  depends_on  = [module.vpc, resource.aws_launch_configuration.beta-test-songs-launch-config]
+  name_prefix = resource.aws_launch_configuration.beta-test-songs-launch-config.name_prefix
+
+  termination_policies      = ["OldestInstance"]
+  default_cooldown          = 30
+  health_check_grace_period = 30
+
+  launch_configuration = aws_launch_configuration.beta-test-songs-launch-config.name
+  min_size             = 1
+  max_size             = 3
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  vpc_zone_identifier = module.vpc.private_subnets
 }
