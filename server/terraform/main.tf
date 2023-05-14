@@ -128,7 +128,7 @@ resource "aws_ecs_cluster" "beta-test-songs-cluster" {
   name = "${local.prefix}-${var.stage}-cluster"
 }
 
-resource "aws_ecs_task_definition" "task_definition" {
+resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
   family             = "${local.prefix}-${var.stage}"
   execution_role_arn = aws_iam_role.ecs_agent.arn
   container_definitions = jsonencode([
@@ -164,4 +164,71 @@ resource "aws_ecs_task_definition" "task_definition" {
       Name = "${local.prefix}-${var.stage}"
     }
   )
+}
+
+resource "aws_ecs_service" "beta-test-songs-ecs-service" {
+  name            = var.service
+  task_definition = aws_ecs_task_definition.beta-test-songs-task-definition.arn
+  cluster         = aws_ecs_cluster.beta-test-songs-cluster.id
+  desired_count   = 1
+
+  load_balancer {
+    target_group_arn = aws_alb_target_group.beta-test-songs-alb-target-group.arn
+    container_name   = aws_ecs_task_definition.beta-test-songs-task-definition.family
+    container_port   = 3000
+  }
+}
+
+### ALB
+resource "aws_alb" "beta-test-songs-alb" {
+  depends_on = [module.vpc]
+
+  name               = "${local.prefix}-alb-${var.stage}"
+  internal           = false
+  load_balancer_type = "application"
+  subnets = module.vpc.public_subnets
+
+  enable_deletion_protection = false
+}
+
+resource "aws_lb_listener" "beta-test-songs-alb-listener" {
+  load_balancer_arn = aws_alb.beta-test-songs-alb.arn
+  port              = 3000
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.beta-test-songs-cert.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.beta-test-songs-alb-target-group.arn
+  }
+
+  tags = local.common_tags
+}
+
+resource "aws_lb_listener_certificate" "beta-test-songs-alblc" {
+  depends_on = [aws_lb_listener.beta-test-songs-alb-listener, aws_acm_certificate.beta-test-songs-cert]
+
+  listener_arn    = aws_lb_listener.beta-test-songs-alb-listener.arn
+  certificate_arn = aws_acm_certificate.beta-test-songs-cert.arn
+}
+
+resource "aws_alb_target_group" "beta-test-songs-alb-target-group" {
+  name     = "${local.prefix}-alb-tg-${var.stage}"
+  port     = 3000
+  protocol = "HTTP"
+  vpc_id   = module.vpc.vpc_id
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_acm_certificate" "beta-test-songs-cert" {
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
