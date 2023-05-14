@@ -36,6 +36,7 @@ jobs:
           ${{ runner.os }}-pnpm-store-
 
     - name: Install dependencies
+      working-directory: './server'
       run: pnpm install
 
     - name: Build app
