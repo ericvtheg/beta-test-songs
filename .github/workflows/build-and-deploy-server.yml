@@ -1,0 +1,62 @@
+name: Deploy server
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+        
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout source code
+      uses: actions/checkout@v2
+
+    - uses: pnpm/action-setup@v2
+      name: Install pnpm
+      id: pnpm-install
+      with:
+        version: 7
+        run_install: false
+
+    - name: Get pnpm store directory
+      id: pnpm-cache
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Build app
+      working-directory: './server'
+      run: |
+        pnpm install --prod --frozen-lockfile
+        pnpm run build
+
+    - name: Generate deployment package
+      working-directory: './server'
+      run: zip -r deploy.zip . -x '*.git*'
+
+    - name: Deploy to EB
+      uses: einaregilsson/beanstalk-deploy@v21
+      with:
+        aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        application_name: beta-test-songs
+        environment_name: beta-test-songs-prod
+        version_label: 12345
+        version_description: ${{github.SHA}}
+        region: us-east-2
+        deployment_package: deploy.zip
+        # wait_for_deployment: false
