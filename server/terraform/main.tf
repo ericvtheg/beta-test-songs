@@ -122,3 +122,46 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
 
   vpc_zone_identifier = module.vpc.private_subnets
 }
+
+### ECS
+resource "aws_ecs_cluster" "beta-test-songs-cluster" {
+  name = "${local.prefix}-${var.stage}-cluster"
+}
+
+resource "aws_ecs_task_definition" "task_definition" {
+  family             = "${local.prefix}-${var.stage}"
+  execution_role_arn = aws_iam_role.ecs_agent.arn
+  container_definitions = jsonencode([
+    {
+      name      = "${local.prefix}-${var.stage}"
+      image     = "516207173224.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
+      cpu       = 512
+      memory    = 768
+      essential = true
+      portMappings = [
+        {
+          containerPort = 3000
+          hostPort      = 3000
+        }
+      ],
+      environment = [
+        { "name" : "STAGE", "value" : var.stage },
+      ],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          "awslogs-group"         = "${resource.aws_cloudwatch_log_group.beta-test-songs-log-group.name}"
+          "awslogs-region"        = var.aws_region
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
+    }
+  ])
+
+  tags = merge(
+    local.common_tags,
+    {
+      Name = "${local.prefix}-${var.stage}"
+    }
+  )
+}
