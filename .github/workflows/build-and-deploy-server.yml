@@ -62,5 +62,5 @@ jobs:
         version_label: 12345
         version_description: ${{github.SHA}}
         region: us-east-2
-        deployment_package: deploy.zip
+        deployment_package: './server/deploy.zip'
         # wait_for_deployment: false

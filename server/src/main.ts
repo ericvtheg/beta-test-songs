@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  // Enable shutdown hooks for Prisma
+  // Enable Shutdown hooks for Prisma
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
 
