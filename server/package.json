@@ -28,7 +28,6 @@
     "@aws-sdk/client-ses": "^3.321.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
-    "@nestjs/cli": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "4.13.0",
@@ -39,6 +38,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
+    "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
     "@types/express": "^4.17.13",

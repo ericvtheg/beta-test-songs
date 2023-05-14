@@ -42,12 +42,15 @@ jobs:
     - name: Build app
       working-directory: './server'
       run: |
-        pnpm install --prod --frozen-lockfile
+        pnpm install --frozen-lockfile
         pnpm run build
 
     - name: Generate deployment package
       working-directory: './server'
-      run: zip -r deploy.zip . -x '*.git*'
+      run: |
+        rm -rf node_modules
+        pnpm install --prod --frozen-lockfile
+        zip -r deploy.zip . -x '*.git*'
 
     - name: Deploy to EB
       uses: einaregilsson/beanstalk-deploy@v21
