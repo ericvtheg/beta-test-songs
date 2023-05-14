@@ -232,3 +232,17 @@ resource "aws_acm_certificate" "beta-test-songs-cert" {
     create_before_destroy = true
   }
 }
+
+### Route53
+
+resource "aws_route53_record" "www-beta-test-songs" {
+  zone_id = var.zone_id
+  name    = var.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_alb.beta-test-songs-alb.dns_name
+    zone_id                = aws_alb.betatest-songs-alb.zone_id
+    evaluate_target_health = true
+  }
+}
