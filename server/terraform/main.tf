@@ -15,7 +15,7 @@ module "vpc" {
 }
 
 ### ECR
-resource "aws_ecr_repository" "tune-train" {
+resource "aws_ecr_repository" "beta-test-songs-ecr" {
   name                 = "${local.prefix}-repo-${var.stage}"
   image_tag_mutability = "MUTABLE"
   force_delete         = true
@@ -40,4 +40,26 @@ data "aws_iam_policy_document" "ecs_agent" {
       identifiers = ["ecs-tasks.amazonaws.com", "ecs.amazonaws.com", "ec2.amazonaws.com"]
     }
   }
+}
+resource "aws_iam_role_policy_attachment" "ecs-policy" {
+  role       = aws_iam_role.ecs_agent.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "rds-policy" {
+  role       = aws_iam_role.ecs_agent.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonRDSDataFullAccess"
+}
+
+resource "aws_iam_instance_profile" "ecs_agent" {
+  name = "ecs-agent"
+  role = aws_iam_role.ecs_agent.name
+}
+
+### Cloudwatch
+
+resource "aws_cloudwatch_log_group" "beta-test-songs-log-group" {
+  name              = "${local.prefix}-${var.stage}-logs"
+  retention_in_days = 14
+
 }
