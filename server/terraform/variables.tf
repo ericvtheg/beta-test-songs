@@ -55,7 +55,7 @@ variable "image_tag" {
 ### Secrets
 
 output "db_host" {
-  value = aws_db_instance.beta-test-songs-rds.address
+  value     = aws_db_instance.beta-test-songs-rds.address
   sensitive = true
 }
 

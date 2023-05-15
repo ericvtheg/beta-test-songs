@@ -54,7 +54,7 @@ resource "aws_cloudwatch_log_group" "beta-test-songs-log-group" {
 ### RDS 
 
 resource "aws_db_subnet_group" "beta-test-songs-db-subnet-group" {
-  name = "${local.prefix}-db-subnet-group"
+  name       = "${local.prefix}-db-subnet-group"
   subnet_ids = module.vpc.private_subnets
 }
 
@@ -215,7 +215,7 @@ resource "aws_alb" "beta-test-songs-alb" {
   name               = "${local.prefix}-alb-${var.stage}"
   internal           = false
   load_balancer_type = "application"
-  subnets = module.vpc.public_subnets
+  subnets            = module.vpc.public_subnets
 
   enable_deletion_protection = false
 }
