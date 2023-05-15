@@ -54,8 +54,8 @@ variable "image_tag" {
 
 ### Secrets
 
-variable "db_host" {
-  type      = string
+output "db_host" {
+  value = aws_db_instance.beta-test-songs-rds.address
   sensitive = true
 }
 
@@ -79,7 +79,7 @@ variable "domain_name" {
   sensitive = true
 }
 
-variable "zone_id" {
+variable "dns_zone_id" {
   type      = string
   sensitive = true
 }

@@ -73,9 +73,9 @@ resource "aws_db_instance" "beta-test-songs-rds" {
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
 
-  # db_name  = var.db_name
-  # username = var.db_username
-  # password = var.db_password
+  db_name  = var.db_name
+  username = var.db_username
+  password = var.db_password
 
   db_subnet_group_name = aws_db_subnet_group.beta-test-songs-db-subnet-group.name
 }
@@ -264,7 +264,7 @@ resource "aws_acm_certificate" "beta-test-songs-cert" {
 
 ### Route53
 resource "aws_route53_record" "www-beta-test-songs" {
-  zone_id = var.zone_id
+  zone_id = var.dns_zone_id
   name    = var.domain_name
   type    = "A"
 
