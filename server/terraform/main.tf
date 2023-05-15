@@ -130,7 +130,7 @@ resource "aws_launch_configuration" "beta-test-songs-launch-config" {
 echo ECS_CLUSTER=${local.prefix}-${var.stage}-cluster >> /etc/ecs/ecs.config
 EOF
 
-  # key_name = "eric"
+  key_name = "eric"
 }
 
 resource "aws_autoscaling_group" "beta-test-songs-asg" {
