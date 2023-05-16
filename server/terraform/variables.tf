@@ -52,6 +52,11 @@ variable "image_tag" {
   type = string
 }
 
+variable "domain_name" {
+  type      = string
+  description = "The domain name for the website."
+}
+
 ### Secrets
 
 output "db_host" {
@@ -70,11 +75,6 @@ variable "db_username" {
 }
 
 variable "db_password" {
-  type      = string
-  sensitive = true
-}
-
-variable "domain_name" {
   type      = string
   sensitive = true
 }
