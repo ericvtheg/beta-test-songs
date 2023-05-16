@@ -63,6 +63,17 @@ resource "aws_s3_bucket_website_configuration" "beta-test-songs-frontend-hosting
   }
 }
 
+resource "aws_acm_certificate" "beta-test-songs-frontend-cert" {
+  provider = aws.us-east-1
+
+  domain_name       = var.domain_name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
   enabled         = true
   is_ipv6_enabled = true
@@ -84,7 +95,8 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.beta-test-songs-frontend-cert.arn
+    ssl_support_method = "sni-only"
   }
 
   restrictions {
@@ -93,6 +105,8 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
       locations        = []
     }
   }
+
+  aliases = [var.domain_name]
 
   default_cache_behavior {
     cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
