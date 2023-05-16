@@ -31,7 +31,7 @@ export default function SongModal() {
   const submitReview = async () => {
     const { text, reviewId } = reviewData;
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:3000/song/submit-review`,
         {
           text,
