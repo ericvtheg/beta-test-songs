@@ -52,7 +52,6 @@ resource "aws_cloudwatch_log_group" "beta-test-songs-log-group" {
 }
 
 ### RDS 
-
 resource "aws_db_subnet_group" "beta-test-songs-db-subnet-group" {
   name       = "${local.prefix}-db-subnet-group"
   subnet_ids = module.vpc.private_subnets
@@ -231,8 +230,6 @@ resource "aws_lb_listener" "beta-test-songs-alb-listener" {
     type             = "forward"
     target_group_arn = aws_alb_target_group.beta-test-songs-alb-target-group.arn
   }
-
-  tags = local.common_tags
 }
 
 resource "aws_lb_listener_certificate" "beta-test-songs-alblc" {
@@ -270,7 +267,7 @@ resource "aws_route53_record" "www-beta-test-songs" {
 
   alias {
     name                   = aws_alb.beta-test-songs-alb.dns_name
-    zone_id                = aws_alb.betatest-songs-alb.zone_id
+    zone_id                = aws_alb.beta-test-songs-alb.zone_id
     evaluate_target_health = true
   }
 }

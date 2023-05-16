@@ -16,8 +16,8 @@ variable "aws_region" {
 }
 
 locals {
-  aws_region = "us-east-2"
-  prefix     = "beta-test-songs"
+  aws_region = var.aws_region
+  prefix     = var.service
   common_tags = {
     service   = var.service
     managedBy = "terraform"
