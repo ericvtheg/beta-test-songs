@@ -67,6 +67,7 @@ resource "aws_acm_certificate" "beta-test-songs-frontend-cert" {
   provider = aws.us-east-1
 
   domain_name       = var.domain_name
+  subject_alternative_names = ["www.${var.domain_name}", "*.${var.domain_name}"]
   validation_method = "DNS"
 
   lifecycle {
@@ -106,7 +107,7 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
     }
   }
 
-  aliases = [var.domain_name]
+  aliases = [var.domain_name, "www.${var.domain_name}", "*.${var.domain_name}"]
 
   default_cache_behavior {
     cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
@@ -115,5 +116,17 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = aws_s3_bucket.beta-test-songs-frontend-bucket.bucket_regional_domain_name
+  }
+}
+
+resource "aws_route53_record" "www-beta-test-songs" {
+  zone_id = var.dns_zone_id
+  name    = "test.${var.domain_name}"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.beta-test-songs-frontend-distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.beta-test-songs-frontend-distribution.hosted_zone_id
+    evaluate_target_health = true
   }
 }
