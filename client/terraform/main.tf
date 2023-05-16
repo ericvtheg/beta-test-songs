@@ -20,7 +20,7 @@ resource "aws_s3_bucket_policy" "beta-test-songs-frontend-bucket-policy" {
   )
 }
 
-resource "aws_s3_object" "file" {
+resource "aws_s3_object" "beta-test-songs-frontend-bucket-files" {
   for_each     = fileset("${path.module}/..", "dist/**/*.{html,css,js}") #can include images here
   bucket       = aws_s3_bucket.beta-test-songs-frontend-bucket.id
   key          = replace(each.value, "/^dist//", "")
