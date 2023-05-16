@@ -12,7 +12,7 @@ terraform {
     region                  = "us-east-2"
     profile                 = "default"
     encrypt                 = "true"
-    dynamodb_table          = "beta-test-songs-terraform-state"
+    dynamodb_table          = "beta-test-songs-terraform-lock"
     shared_credentials_file = "$HOME/.aws/credentials"
   }
 }
