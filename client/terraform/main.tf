@@ -66,9 +66,9 @@ resource "aws_s3_bucket_website_configuration" "beta-test-songs-frontend-hosting
 resource "aws_acm_certificate" "beta-test-songs-frontend-cert" {
   provider = aws.us-east-1
 
-  domain_name       = var.domain_name
+  domain_name               = var.domain_name
   subject_alternative_names = ["www.${var.domain_name}", "*.${var.domain_name}"]
-  validation_method = "DNS"
+  validation_method         = "DNS"
 
   lifecycle {
     create_before_destroy = true
@@ -97,7 +97,7 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
 
   viewer_certificate {
     acm_certificate_arn = aws_acm_certificate.beta-test-songs-frontend-cert.arn
-    ssl_support_method = "sni-only"
+    ssl_support_method  = "sni-only"
   }
 
   restrictions {
@@ -117,11 +117,49 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
     cached_methods         = ["GET", "HEAD"]
     target_origin_id       = aws_s3_bucket.beta-test-songs-frontend-bucket.bucket_regional_domain_name
   }
+
+  origin {
+    domain_name = var.alb_dns_name
+    origin_id   = "BACKEND_ALB_ORIGIN_ID"
+
+    custom_origin_config {
+      http_port                = 80
+      https_port               = 443
+      origin_keepalive_timeout = 5
+      origin_protocol_policy   = "https-only"
+      origin_read_timeout      = 30
+      origin_ssl_protocols = [
+        "TLSv1.2",
+      ]
+    }
+  }
+
+  ordered_cache_behavior {
+    path_pattern     = "/api/*"
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD", "OPTIONS"]
+    target_origin_id = "BACKEND_ALB_ORIGIN_ID"
+
+    forwarded_values {
+      query_string = true
+      headers      = ["Origin"]
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    min_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
 }
 
 resource "aws_route53_record" "www-beta-test-songs" {
   zone_id = var.dns_zone_id
-  name    = "test.${var.domain_name}"
+  name    = var.domain_name
   type    = "A"
 
   alias {

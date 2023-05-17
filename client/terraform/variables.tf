@@ -44,3 +44,8 @@ variable "frontend_bucket_name" {
   type        = string
   description = "The name of the bucket without the www. prefix. Normally domain_name."
 }
+
+variable "alb_dns_name" {
+  type        = string
+  description = "DNS of the application load balancer for our backend API."
+}

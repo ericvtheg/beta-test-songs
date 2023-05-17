@@ -53,8 +53,13 @@ variable "image_tag" {
 }
 
 variable "domain_name" {
-  type      = string
+  type        = string
   description = "The domain name for the website."
+}
+
+output "alb_dns_name" {
+  value       = aws_alb.beta-test-songs-alb.dns_name
+  description = "DNS of the application load balancer for our backend API."
 }
 
 ### Secrets
