@@ -22,7 +22,7 @@ export class EmailService {
   }: IEmailParams): Promise<void> {
     const html = this.html.replace(
       '{{review_link}}',
-      `http://localhost:5173/song/id/${songId}`,
+      `https://betatestsongs.com/song/id/${songId}`,
     );
 
     const command = new SendEmailCommand({

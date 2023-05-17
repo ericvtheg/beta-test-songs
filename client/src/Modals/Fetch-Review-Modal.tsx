@@ -11,7 +11,7 @@ export default function FetchReviewModal() {
     const fetchTrackData = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:3000/song/start-review",
+          "/api/start-review",
           {},
           {
             headers: {

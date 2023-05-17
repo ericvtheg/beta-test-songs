@@ -32,7 +32,7 @@ export default function SongModal() {
     const { text, reviewId } = reviewData;
     try {
       await axios.post(
-        `http://localhost:3000/song/submit-review`,
+        `/api/song/submit-review`,
         {
           text,
           liked: true,
@@ -63,7 +63,7 @@ export default function SongModal() {
       const fetchTrackData = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/song/id/${trackId}`,
+            `/api/song/id/${trackId}`,
             {
               headers: {
                 "Content-Type": "application/json",
