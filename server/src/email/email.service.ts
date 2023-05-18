@@ -2,6 +2,7 @@ import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { Injectable } from '@nestjs/common';
 import mjml2html from 'mjml';
 import { readFileSync } from 'fs';
+import * as path from 'path';
 
 interface IEmailParams {
   email: string;
@@ -12,7 +13,8 @@ interface IEmailParams {
 export class EmailService {
   private html: string;
   constructor(private readonly ses: SESClient) {
-    const tpl = readFileSync(`./src/email/pages/song-reviewed.mjml`).toString();
+    const emailFilePath = path.join(__dirname, './pages/song-reviewed.mjml');
+    const tpl = readFileSync(emailFilePath).toString();
     this.html = mjml2html(tpl, { minify: true }).html;
   }
 
