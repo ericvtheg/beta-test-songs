@@ -168,8 +168,8 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
     {
       name      = "${local.prefix}-${var.stage}"
       image     = "${var.aws_account_id}.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
-      cpu       = 206
-      memory    = 512
+      cpu       = 1024
+      memory    = 768
       essential = true
       portMappings = [
         {
