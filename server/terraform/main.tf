@@ -162,7 +162,7 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
   container_definitions = jsonencode([
     {
       name      = "${local.prefix}-${var.stage}"
-      image     = "516207173224.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
+      image     = "837765293758.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
       cpu       = 512
       memory    = 768
       essential = true
@@ -222,7 +222,7 @@ resource "aws_alb" "beta-test-songs-alb" {
 
 resource "aws_lb_listener" "beta-test-songs-alb-listener" {
   load_balancer_arn = aws_alb.beta-test-songs-alb.arn
-  port              = 3000
+  port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = aws_acm_certificate.beta-test-songs-cert.arn
