@@ -6,8 +6,8 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && (cp -r src/email/pages/ dist/src/email/pages/) && pnpm prisma:generate",
-    "deploy": "pnpm build && sh deploy.sh && (cd terraform && terraform apply)",
+    "build": "pnpm prisma:generate && nest build",
+    "deploy": "pnpm build && sh deploy.sh",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "db:up": "docker compose up -d",
     "start": "nest start",
@@ -22,6 +22,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate": "prisma migrate deploy",
     "prisma:reset": "prisma migrate reset",
     "prisma:seed": "ts-node prisma/seed.ts"
   },
