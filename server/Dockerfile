@@ -70,8 +70,6 @@ COPY --chown=node:node --from=build /usr/src/app/pnpm-lock.yaml ./
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
 
-RUN npm install -g pnpm@7.27.0
-
 EXPOSE 8080
 
 # Start the server using the production build

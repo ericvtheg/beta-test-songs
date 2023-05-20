@@ -122,7 +122,7 @@ data "aws_ami" "aws_optimized_ecs" {
 resource "aws_launch_configuration" "beta-test-songs-launch-config" {
   name_prefix          = "${local.prefix}-${var.stage}-launch-config-"
   image_id             = data.aws_ami.aws_optimized_ecs.id
-  instance_type        = "t3.micro"
+  instance_type        = "t3.medium"
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.arn
 
   lifecycle {
@@ -149,6 +149,11 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
   min_size             = 1
   max_size             = 3
 
+  # can use mixed instances
+  # should I just do fargate?
+  # use ec2 free tier for ssh tunneling to rds
+  # do some thresholds for scaling more instances
+
   lifecycle {
     create_before_destroy = true
   }
@@ -168,7 +173,7 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
     {
       name      = "${local.prefix}-${var.stage}"
       image     = "${var.aws_account_id}.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
-      cpu       = 1024
+      cpu       = 524
       memory    = 768
       essential = true
       portMappings = [
