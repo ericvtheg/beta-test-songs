@@ -210,6 +210,8 @@ resource "aws_ecs_service" "beta-test-songs-ecs-service" {
   task_definition = aws_ecs_task_definition.beta-test-songs-task-definition.arn
   cluster         = aws_ecs_cluster.beta-test-songs-cluster.id
   desired_count   = 1
+  deployment_minimum_healthy_percent = 0
+  
 
   load_balancer {
     target_group_arn = aws_alb_target_group.beta-test-songs-alb-target-group.arn
