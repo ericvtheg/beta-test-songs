@@ -9,9 +9,11 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_nat_gateway     = true
   enable_dns_hostnames   = true
-  one_nat_gateway_per_az = true
+  
+  enable_nat_gateway     = true
+  single_nat_gateway = true
+  one_nat_gateway_per_az = false
 }
 
 ### IAM
@@ -138,7 +140,7 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
 
   termination_policies      = ["OldestInstance"]
   default_cooldown          = 30
-  health_check_grace_period = 30
+  health_check_grace_period = 300
 
   launch_configuration = aws_launch_configuration.beta-test-songs-launch-config.name
   min_size             = 1
@@ -163,8 +165,8 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
     {
       name      = "${local.prefix}-${var.stage}"
       image     = "${var.aws_account_id}.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
-      cpu       = 512
-      memory    = 768
+      cpu       = 206
+      memory    = 512
       essential = true
       portMappings = [
         {
