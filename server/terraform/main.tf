@@ -16,6 +16,9 @@ module "vpc" {
   one_nat_gateway_per_az = false
 }
 
+# TODO must allow outbound traffic in security group in default vpc
+# would really like to fix this with IAC
+
 ### IAM
 resource "aws_iam_role" "ecs_agent" {
   name               = "${local.prefix}-execution-task-role"
