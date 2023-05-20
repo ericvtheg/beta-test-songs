@@ -246,6 +246,11 @@ resource "aws_alb_target_group" "beta-test-songs-alb-target-group" {
   protocol = "HTTP"
   vpc_id   = module.vpc.vpc_id
 
+  health_check {
+    matcher="200"
+    path="/api/health"
+  }
+
   lifecycle {
     create_before_destroy = true
   }
