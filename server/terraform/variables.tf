@@ -69,6 +69,11 @@ output "db_host" {
   sensitive = true
 }
 
+variable aws_account_id {
+  type = string
+  sensitive = true
+}
+
 variable "db_name" {
   type      = string
   sensitive = true
