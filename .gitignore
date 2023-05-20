@@ -36,6 +36,7 @@ coverage/
 !.vscode/extensions.json
 
 .env
+.env.prod
 
 data/
 

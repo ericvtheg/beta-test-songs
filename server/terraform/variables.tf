@@ -84,6 +84,11 @@ variable "db_password" {
   sensitive = true
 }
 
+variable db_url {
+  type = string
+  sensitive = true
+}
+
 variable "dns_zone_id" {
   type      = string
   sensitive = true

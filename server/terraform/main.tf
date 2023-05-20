@@ -174,6 +174,7 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
       ],
       environment = [
         { "name" : "STAGE", "value" : var.stage },
+        { "name" : "DATABASE_URL", "value" : var.db_url },
       ],
       logConfiguration = {
         logDriver = "awslogs",
