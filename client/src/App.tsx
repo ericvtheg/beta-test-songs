@@ -10,9 +10,9 @@ import FetchReviewModal from "./Modals/Fetch-Review-Modal";
 import PageNotFound from "./Pages/404";
 import SubmitModal from "./Modals/Submit-Modal";
 import SongModal from "./Modals/Song-Modal";
-import SongSuccessModal from "./Modals/Track-Success-Modal";
+import SongSuccessModal from "./Modals/Song-Success-Modal";
 import ReviewSuccessModal from "./Modals/Review-Success-Modal";
-import NoSongsAvailableModal from "./Modals/No-Tracks-Available";
+import NoSongsAvailableModal from "./Modals/No-Songs-Available";
 import Error from "./Pages/Error";
 
 const router = createBrowserRouter(
