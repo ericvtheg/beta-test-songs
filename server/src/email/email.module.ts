@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { SESClient } from '@aws-sdk/client-ses';
 import { EmailService } from './email.service';
 import { ConfigService } from '@nestjs/config';
-import { startLocalEmailServer } from './local-server.service';
+import { startLocalEmailServer } from './local-server';
 @Module({
   providers: [
     EmailService,
