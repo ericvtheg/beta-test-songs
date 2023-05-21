@@ -104,6 +104,9 @@ export default function SongModal() {
       <Dialog
         as="div"
         className="relative z-10"
+        onClose={() => {
+          // navigate("/");
+        }}
       >
         <Transition.Child
           as={Fragment}
