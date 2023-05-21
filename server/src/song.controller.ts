@@ -6,6 +6,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Logger,
 } from '@nestjs/common';
 import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
 import { EmailService } from './email/email.service';
@@ -59,6 +60,8 @@ interface ISongIncompleteReview {
 
 @Controller('song')
 export class SongController {
+  private readonly logger = new Logger(SongController.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly email: EmailService,
@@ -164,7 +167,9 @@ export class SongController {
   }
 
   @Post('/submit-review')
-  async submitReview(@Body() payload: SubmitReviewDto): Promise<IReview> {
+  async submitReview(
+    @Body() payload: SubmitReviewDto,
+  ): Promise<Omit<IReview, 'email'>> {
     const { text, reviewId } = payload;
 
     // This isn't great. I think it'd be solved by having user accounts
@@ -188,12 +193,14 @@ export class SongController {
       email: review.song.email,
       songId: review.song.id,
     });
+    this.logger.log(
+      `Emailing ${review.song.email} regarding ${review.song.id}`,
+    );
 
     return {
       id: review.id,
       completedAt: review.completedAt,
       text: review.text,
-      email: review.email,
     };
   }
 
