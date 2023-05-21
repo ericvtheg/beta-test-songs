@@ -122,7 +122,7 @@ data "aws_ami" "aws_optimized_ecs" {
 resource "aws_launch_configuration" "beta-test-songs-launch-config" {
   name_prefix          = "${local.prefix}-${var.stage}-launch-config-"
   image_id             = data.aws_ami.aws_optimized_ecs.id
-  instance_type        = "t3.medium"
+  instance_type        = "t3.micro"
   iam_instance_profile = aws_iam_instance_profile.ecs_agent.arn
 
   lifecycle {
