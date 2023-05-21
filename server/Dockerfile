@@ -69,9 +69,11 @@ COPY --chown=node:node --from=build /usr/src/app/package*.json ./
 COPY --chown=node:node --from=build /usr/src/app/pnpm-lock.yaml ./
 COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
+COPY --chown=node:node prisma ./prisma
 
 EXPOSE 8080
 
 # Start the server using the production build
 RUN npm install -g pnpm@7.27.0
+RUN npm install -g prisma
 CMD pnpm run start:prod
