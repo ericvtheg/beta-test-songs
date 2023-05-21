@@ -80,7 +80,7 @@ export default function SongModal() {
           setReviewCompleted(review.text !== null);
         } catch (err) {
           console.error("err");
-          navigate("/");
+          navigate("/error");
         }
       };
       fetchTrackData();
@@ -104,9 +104,6 @@ export default function SongModal() {
       <Dialog
         as="div"
         className="relative z-10"
-        onClose={() => {
-          // navigate("/");
-        }}
       >
         <Transition.Child
           as={Fragment}

@@ -35,7 +35,7 @@ export default function FetchReviewModal() {
           }
         } else {
           console.error("err");
-          navigate("/");
+          navigate("/error");
         }
       }
     };

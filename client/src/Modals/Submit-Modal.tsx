@@ -28,7 +28,7 @@ export default function SubmitModal() {
       navigate("/track-success");
     } catch (err) {
       console.error(err);
-      navigate("/");
+      navigate("/error");
     }
   };
 

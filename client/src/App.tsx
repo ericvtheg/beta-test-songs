@@ -13,6 +13,7 @@ import SongModal from "./Modals/Song-Modal";
 import TrackSuccessModal from "./Modals/Track-Success-Modal";
 import ReviewSuccessModal from "./Modals/Review-Success-Modal";
 import NoTracksAvailableModal from "./Modals/No-Tracks-Available";
+import Error from "./Pages/Error";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ const router = createBrowserRouter(
       <Route path="track-success" element={<TrackSuccessModal />} />
       <Route path="review-success" element={<ReviewSuccessModal />} />
       <Route path="no-tracks-available" element={<NoTracksAvailableModal />} />
+      <Route path="error" element={<Error />} />
       <Route path="*" element={<PageNotFound />} />
     </Route>
   )
