@@ -8,7 +8,7 @@ export default function FetchReviewModal() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchTrackData = async () => {
+    const fetchSongData = async () => {
       try {
         const response = await axios.post(
           "/api/song/start-review",
@@ -20,10 +20,10 @@ export default function FetchReviewModal() {
           }
         );
         const { id, link, review } = response.data;
-        navigate(`/track/${id}`, {
+        navigate(`/song/${id}`, {
           state: {
-            trackId: id,
-            trackLink: link,
+            songId: id,
+            songLink: link,
             text: review.text ?? "",
             reviewId: review.id,
           },
@@ -31,7 +31,7 @@ export default function FetchReviewModal() {
       } catch (err: unknown | AxiosError) {
         if (axios.isAxiosError(err)) {
           if (err?.response?.status === 404) {
-            navigate("/no-tracks-available");
+            navigate("/no-songs-available");
           }
         } else {
           console.error("err");
@@ -40,7 +40,7 @@ export default function FetchReviewModal() {
       }
     };
     try {
-      fetchTrackData();
+      fetchSongData();
     } catch (err) {
       console.log("hit", err);
     }
@@ -83,7 +83,7 @@ export default function FetchReviewModal() {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Fetching a Track
+                  Fetching a Song
                 </Dialog.Title>
                 <div className="flex flex-col">
                   <div>
@@ -91,7 +91,7 @@ export default function FetchReviewModal() {
                   </div>
                   <div className="m-auto">
                     <h6 className="text-gray-500">
-                      We&#39;re getting the next track in the review queue...
+                      We&#39;re getting the next songs in the review queue...
                     </h6>
                   </div>
                 </div>

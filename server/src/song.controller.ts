@@ -147,7 +147,7 @@ export class SongController {
 
     if (queryResult.length === 0) {
       throw new NotFoundException(
-        'No tracks available to review at the moment :(',
+        'No songs available to review at the moment :(',
       );
     }
 

@@ -14,7 +14,7 @@
     </mj-section>
     <mj-hero mode="fluid-height" background-width="600px" background-height="400px" background-color="#fafafa" padding="100px 0px">
       <mj-text padding="20px" color="#000000" font-family="Helvetica" align="center" font-size="45px" line-height="45px" font-weight="900">
-        Your Track Has Been Reviewed
+        Your Song Has Been Reviewed
       </mj-text>
       <mj-button href="{{review_link}}" background-color="#4F46E5" font-family="Helvetica" align="center" font-size="20px" href="#">See the Review</mj-button>
     </mj-hero>

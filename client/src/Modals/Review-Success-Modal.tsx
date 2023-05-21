@@ -65,7 +65,7 @@ export default function ReviewSuccessModal() {
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           Thank you for taking the time to review another
-                          producer&#39;s track!
+                          producer&#39;s song!
                         </p>
                       </div>
                     </div>
@@ -76,13 +76,13 @@ export default function ReviewSuccessModal() {
                     to="/review"
                     className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                   >
-                    Review Another Track
+                    Review Another Song
                   </Link>
                   <Link
                     to="/submit"
                     className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                   >
-                    Submit a Track
+                    Submit a Song
                   </Link>
                 </div>
               </Dialog.Panel>

@@ -30,7 +30,7 @@ export class EmailService {
     const command = new SendEmailCommand({
       Destination: { ToAddresses: [email] },
       Message: {
-        Subject: { Data: 'Your Track Has Been Reviewed' },
+        Subject: { Data: 'Your Song Has Been Reviewed' },
         Body: {
           Html: {
             Data: html,

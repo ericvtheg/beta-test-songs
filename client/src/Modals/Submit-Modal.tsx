@@ -25,7 +25,7 @@ export default function SubmitModal() {
           "Content-Type": "application/json",
         },
       });
-      navigate("/track-success");
+      navigate("/song-success");
     } catch (err) {
       console.error(err);
       navigate("/error");
@@ -88,11 +88,11 @@ export default function SubmitModal() {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900 pr-6"
                 >
-                  Submit your track
+                  Submit your song
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500 pr-6">
-                    Once you submit your track it'll be put into a review queue.
+                    Once you submit your song it'll be put into a review queue.
                     You'll be emailed once the review is complete.
                   </p>
                 </div>
@@ -110,13 +110,13 @@ export default function SubmitModal() {
                         className="block text-gray-700 text-sm font-bold mb-2"
                         htmlFor="link"
                       >
-                        Track Link
+                        Song Link
                       </label>
                       <input
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
                         id="link"
                         type="text"
-                        placeholder="soundcloud.com/your-unlisted-track"
+                        placeholder="soundcloud.com/your-unlisted-song"
                         onChange={handleChange}
                         required
                       />

@@ -8,20 +8,20 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 interface ReviewSongData {
   text: string;
   reviewId: number | null;
-  trackId: number | null;
-  trackLink: string | null;
+  songId: number | null;
+  songLink: string | null;
 }
 
 export default function SongModal() {
   const [reviewData, setReviewData] = useState<ReviewSongData>({
     text: "",
     reviewId: null,
-    trackId: null,
-    trackLink: null,
+    songId: null,
+    songLink: null,
   });
 
   const { state }: { state: ReviewSongData } = useLocation();
-  const { trackId } = useParams();
+  const { songId } = useParams();
   const navigate = useNavigate();
 
   const [isReviewCompleted, setReviewCompleted] = useState<boolean>(
@@ -60,10 +60,10 @@ export default function SongModal() {
     if (state) {
       setReviewData(state);
     } else {
-      const fetchTrackData = async () => {
+      const fetchSongData = async () => {
         try {
           const response = await axios.get(
-            `/api/song/id/${trackId}`,
+            `/api/song/id/${songId}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -72,8 +72,8 @@ export default function SongModal() {
           );
           const { id, link, review } = response.data;
           setReviewData({
-            trackId: id,
-            trackLink: link,
+            songId: id,
+            songLink: link,
             text: review.text ?? "",
             reviewId: review.id,
           });
@@ -83,7 +83,7 @@ export default function SongModal() {
           navigate("/error");
         }
       };
-      fetchTrackData();
+      fetchSongData();
     }
   }, []);
 
@@ -143,13 +143,13 @@ export default function SongModal() {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900 pr-6"
                 >
-                  {isReviewCompleted ? "Track Review" : "Review a Track"}
+                  {isReviewCompleted ? "Song Review" : "Review a Song"}
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500 pr-6">
                     {isReviewCompleted
-                      ? "Check out the Track's review."
-                      : "Check out the Track and leave some constructive criticism."}
+                      ? "Check out the Song's review."
+                      : "Check out the Song and leave some constructive criticism."}
                   </p>
                 </div>
 
@@ -166,12 +166,12 @@ export default function SongModal() {
                         htmlFor="username"
                         className="block text-sm font-medium leading-6 text-gray-900"
                       >
-                        Track Link
+                        Song Link
                       </label>
                       <div className="mt-2">
                         <div className="flex  rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                           <span className="flex select items-center pl-2 text-gray-900 sm:text-sm">
-                            {reviewData?.trackLink ?? "Loading..."}
+                            {reviewData?.songLink ?? "Loading..."}
                           </span>
                           {/* <input
                             type="text"
@@ -179,7 +179,7 @@ export default function SongModal() {
                             id="username"
                             autoComplete="username"
                             className="block flex-1 border-0 bg-transparent py-1.5 pl-1 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                            placeholder={reviewData.trackLink ?? "Loading..."}
+                            placeholder={reviewData.songLink ?? "Loading..."}
                             disabled={true}
                           /> */}
                         </div>

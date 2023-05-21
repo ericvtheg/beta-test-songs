@@ -4,7 +4,7 @@ import { FaceFrownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function NoTracksAvailableModal() {
+export default function NoSongsAvailableModal() {
   const navigate = useNavigate();
 
   return (
@@ -61,11 +61,11 @@ export default function NoTracksAvailableModal() {
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        No Tracks Available
+                        No Songs Available
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Unfortunately all tracks have been either been reviewed or have reviews in progress.
+                          Unfortunately all songs have been either been reviewed or have reviews in progress.
                         </p>
                       </div>
                     </div>
@@ -76,7 +76,7 @@ export default function NoTracksAvailableModal() {
                     to="/submit"
                     className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                   >
-                    Submit a Track
+                    Submit a Song
                   </Link>
                 </div>
               </Dialog.Panel>

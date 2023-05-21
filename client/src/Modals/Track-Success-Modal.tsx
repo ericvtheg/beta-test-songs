@@ -4,7 +4,7 @@ import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-export default function TrackSuccessModal() {
+export default function SongSuccessModal() {
   const navigate = useNavigate();
 
   return (
@@ -60,12 +60,12 @@ export default function TrackSuccessModal() {
                         as="h3"
                         className="text-base font-semibold leading-6 text-gray-900"
                       >
-                        Track Successfully Submitted
+                        Song Successfully Submitted
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
-                          Thanks for submitting a track! Review another
-                          artist&#39;s track.
+                          Thanks for submitting a song! Review another
+                          artist&#39;s song.
                         </p>
                       </div>
                     </div>
@@ -76,7 +76,7 @@ export default function TrackSuccessModal() {
                     to="/review"
                     className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
                   >
-                    Review a Track
+                    Review a Song
                   </Link>
                 </div>
               </Dialog.Panel>
