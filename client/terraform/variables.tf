@@ -26,7 +26,16 @@ locals {
   content_types = {
     ".html" : "text/html",
     ".css" : "text/css",
-    ".js" : "text/javascript"
+    ".js" : "text/javascript",
+    ".png": "image/png",
+    ".ico": "image/x-icon",
+    ".webmanifest": "application/manifest+json"
+  }
+  website_files = fileset("${path.module}/..", "dist/**/*")
+
+  file_hashes = {
+    for filename in local.website_files :
+      filename => filemd5("../${filename}")
   }
 }
 

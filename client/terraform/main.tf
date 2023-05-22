@@ -47,7 +47,7 @@ resource "aws_s3_bucket_policy" "beta-test-songs-frontend-bucket-policy" {
 }
 
 resource "aws_s3_object" "beta-test-songs-frontend-bucket-files" {
-  for_each     = fileset("${path.module}/..", "dist/**/*.{html,css,js}") #can include images here
+  for_each     = fileset("${path.module}/..", "dist/**/*.{html,css,js,png,ico,webmanifest}") #can include images here
   bucket       = aws_s3_bucket.beta-test-songs-frontend-bucket.id
   key          = replace(each.value, "/^dist//", "")
   source       = "../${each.value}"
@@ -153,8 +153,8 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
     }
 
     min_ttl                = 0
-    default_ttl            = 86400
-    max_ttl                = 31536000
+    default_ttl            = 3600
+    max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
   }
@@ -169,5 +169,13 @@ resource "aws_route53_record" "www-beta-test-songs" {
     name                   = aws_cloudfront_distribution.beta-test-songs-frontend-distribution.domain_name
     zone_id                = aws_cloudfront_distribution.beta-test-songs-frontend-distribution.hosted_zone_id
     evaluate_target_health = true
+  }
+}
+
+resource "null_resource" "invalidate_cache" {
+  triggers = local.file_hashes
+
+  provisioner "local-exec" {
+    command = "aws cloudfront create-invalidation --distribution-id=${aws_cloudfront_distribution.beta-test-songs-frontend-distribution.id} --paths=/*"
   }
 }
