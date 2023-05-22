@@ -20,6 +20,9 @@ export default function SubmitModal() {
 
   const submitSong = async () => {
     try {
+      if (songData.email) {
+        localStorage.setItem("email", songData.email)
+      }
       await axios.post("/api/song/submit-song", songData, {
         headers: {
           "Content-Type": "application/json",

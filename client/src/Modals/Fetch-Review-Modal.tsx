@@ -10,9 +10,10 @@ export default function FetchReviewModal() {
   useEffect(() => {
     const fetchSongData = async () => {
       try {
+        const email = localStorage.getItem("email");
         const response = await axios.post(
           "/api/song/start-review",
-          {},
+          {email},
           {
             headers: {
               "Content-Type": "application/json",
