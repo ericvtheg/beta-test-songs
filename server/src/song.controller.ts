@@ -8,7 +8,7 @@ import {
   Post,
   Logger,
 } from '@nestjs/common';
-import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsInt, IsOptional, IsString, Matches } from 'class-validator';
 import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
 
@@ -27,7 +27,13 @@ class SubmitReviewDto {
 }
 
 class RequestReviewDto {
-  @IsString()
+  @Matches(
+    new RegExp(
+      '^(https?://)?([\\w-]+\\.)?soundcloud\\.com/[\\w-]+(/[\\w-]+)*(/?)?(\\?.*)?(#.*)?$',
+      'i',
+    ),
+    { message: 'Please enter a valid SoundCloud URL' },
+  )
   link: string;
 
   @IsEmail()
