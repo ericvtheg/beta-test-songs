@@ -122,7 +122,7 @@ export default function SubmitModal() {
                         placeholder="soundcloud.com/your-unlisted-song"
                         onChange={handleChange}
                         pattern="^(https?:\/\/)?([\w-]+\.)?(soundcloud\.com)\/[\w-]+(\/[\w-]+)*(\/?)?(\?.*)?(#.*)?$"
-                        onInvalid={(e)=>{(e.target as HTMLInputElement).setCustomValidity("Please enter a valid SoundCloud URL")}}
+                        onInvalid={(e)=>{(e.target as HTMLInputElement).setCustomValidity("Please enter a valid SoundCloud song link")}}
                         required
                       />
                     </div>
