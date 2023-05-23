@@ -8,7 +8,14 @@ import {
   Post,
   Logger,
 } from '@nestjs/common';
-import { IsEmail, IsInt, IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsEmail,
+  IsInt,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+} from 'class-validator';
 import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
 
@@ -23,6 +30,7 @@ class SubmitReviewDto {
   reviewId: number;
 
   @IsString()
+  @MaxLength(10000)
   text: string;
 }
 
@@ -34,9 +42,11 @@ class RequestReviewDto {
     ),
     { message: 'Please enter a valid SoundCloud URL' },
   )
+  @MaxLength(300)
   link: string;
 
   @IsEmail()
+  @MaxLength(300)
   email: string;
 }
 

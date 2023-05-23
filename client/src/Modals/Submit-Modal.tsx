@@ -123,6 +123,7 @@ export default function SubmitModal() {
                         onChange={handleChange}
                         pattern="^(https?:\/\/)?([\w-]+\.)?(soundcloud\.com)\/[\w-]+(\/[\w-]+)*(\/?)?(\?.*)?(#.*)?$"
                         onInvalid={(e)=>{(e.target as HTMLInputElement).setCustomValidity("Please enter a valid SoundCloud song link")}}
+                        maxLength={300}
                         required
                       />
                     </div>
@@ -138,6 +139,7 @@ export default function SubmitModal() {
                         id="email"
                         type="email"
                         placeholder="your@email.com"
+                        maxLength={300}
                         onChange={handleChange}
                         required
                       />
