@@ -6,7 +6,7 @@ import * as path from 'path';
 
 interface IEmailParams {
   email: string;
-  songId: number;
+  songId: string;
 }
 
 @Injectable()

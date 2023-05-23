@@ -8,10 +8,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  
 }
 
 model Song {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(dbgenerated("uuid_generate_v8()")) @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   link      String
@@ -20,7 +21,7 @@ model Song {
 }
 
 model Review {
-  id                   Int       @id @default(autoincrement())
+  id                   String    @id @default(dbgenerated("uuid_generate_v8()")) @db.Uuid
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @default(now()) @updatedAt
   completedAt          DateTime?
@@ -28,5 +29,5 @@ model Review {
   reviewerEmail        String?
   songCreatorEmailedAt DateTime?
   song                 Song      @relation(fields: [songId], references: [id])
-  songId               Int
+  songId               String    @db.Uuid
 }

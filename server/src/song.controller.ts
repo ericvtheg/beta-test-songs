@@ -4,15 +4,15 @@ import {
   Get,
   NotFoundException,
   Param,
-  ParseIntPipe,
   Post,
   Logger,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   IsEmail,
-  IsInt,
   IsOptional,
   IsString,
+  IsUUID,
   Matches,
   MaxLength,
 } from 'class-validator';
@@ -26,8 +26,8 @@ class StartReviewDto {
 }
 
 class SubmitReviewDto {
-  @IsInt()
-  reviewId: number;
+  @IsUUID()
+  reviewId: string;
 
   @IsString()
   @MaxLength(10000)
@@ -51,7 +51,7 @@ class RequestReviewDto {
 }
 
 interface ISong {
-  id: number;
+  id: string;
   createdAt: Date;
   link: string;
   email: string;
@@ -59,16 +59,16 @@ interface ISong {
 }
 
 interface IReview {
-  id: number;
+  id: string;
   completedAt: Date | null;
   text: string | null;
 }
 
 interface ISongIncompleteReview {
-  id: number;
+  id: string;
   link: string;
   review: {
-    id: number;
+    id: string;
     text: null;
   };
 }
@@ -83,7 +83,7 @@ export class SongController {
   ) {}
 
   @Get('id/:id')
-  async getSong(@Param('id', ParseIntPipe) id: number): Promise<ISong> {
+  async getSong(@Param('id', ParseUUIDPipe) id: string): Promise<ISong> {
     const song = await this.prisma.song.findUnique({
       where: { id },
       include: {
@@ -108,13 +108,16 @@ export class SongController {
       email: song.email,
       link: song.link,
       createdAt: song.createdAt,
-      review: [
-        {
-          id: song.review?.[0]?.id,
-          completedAt: song.review?.[0]?.completedAt,
-          text: song.review?.[0]?.text,
-        },
-      ],
+      review:
+        song.review.length === 0
+          ? []
+          : [
+              {
+                id: song.review?.[0]?.id,
+                completedAt: song.review?.[0]?.completedAt,
+                text: song.review?.[0]?.text,
+              },
+            ],
     };
   }
 
@@ -123,7 +126,7 @@ export class SongController {
     @Body() { email }: StartReviewDto,
   ): Promise<ISongIncompleteReview> {
     const queryResult = await this.prisma.$queryRaw<
-      { songId: number; link: string; reviewId: number; text: null }[]
+      { songId: string; link: string; reviewId: string; text: null }[]
     >`
         WITH "toReviewSong" AS (
           SELECT
