@@ -188,9 +188,7 @@ export class SongController {
   }
 
   @Post('/submit-review')
-  async submitReview(
-    @Body() payload: SubmitReviewDto,
-  ): Promise<Omit<IReview, 'email'>> {
+  async submitReview(@Body() payload: SubmitReviewDto): Promise<IReview> {
     const { text, reviewId } = payload;
 
     // This isn't great. I think it'd be solved by having user accounts
