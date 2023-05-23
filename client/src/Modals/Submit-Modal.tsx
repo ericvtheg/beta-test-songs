@@ -116,7 +116,7 @@ export default function SubmitModal() {
                         Song Link
                       </label>
                       <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 leading-tight focus:shadow-outline"
                         id="link"
                         type="text"
                         placeholder="soundcloud.com/your-unlisted-song"
@@ -134,7 +134,7 @@ export default function SubmitModal() {
                         Email
                       </label>
                       <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600 mb-3 leading-tight focus:shadow-outline"
                         id="email"
                         type="email"
                         placeholder="your@email.com"
@@ -144,7 +144,7 @@ export default function SubmitModal() {
                     </div>
                     <div className="flex float-right justify-between">
                       <input
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline"
                         type="submit"
                         value="Submit"
                       />

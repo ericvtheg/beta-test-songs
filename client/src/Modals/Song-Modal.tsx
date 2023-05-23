@@ -213,7 +213,7 @@ export default function SongModal() {
                     ) : (
                       <div className="flex float-right justify-between">
                         <input
-                          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                          className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:shadow-outline"
                           type="submit"
                           value="Submit"
                         />
