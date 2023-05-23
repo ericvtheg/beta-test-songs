@@ -9,3 +9,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <App/>
   </React.StrictMode>,
 )
+
+if (import.meta.env.DEV) {
+	document.getElementById('favicon')?.setAttribute('href', '/favicon-y.ico');
+}
