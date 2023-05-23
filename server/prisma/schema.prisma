@@ -20,12 +20,13 @@ model Song {
 }
 
 model Review {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now()) @updatedAt
-  completedAt DateTime?
-  text        String?
-  email       String?
-  song        Song      @relation(fields: [songId], references: [id])
-  songId      Int
+  id                   Int       @id @default(autoincrement())
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now()) @updatedAt
+  completedAt          DateTime?
+  text                 String?
+  reviewerEmail        String?
+  songCreatorEmailedAt DateTime?
+  song                 Song      @relation(fields: [songId], references: [id])
+  songId               Int
 }

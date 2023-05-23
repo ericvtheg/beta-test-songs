@@ -62,7 +62,6 @@ interface IReview {
   id: number;
   completedAt: Date | null;
   text: string | null;
-  email: string | null;
 }
 
 interface ISongIncompleteReview {
@@ -109,7 +108,13 @@ export class SongController {
       email: song.email,
       link: song.link,
       createdAt: song.createdAt,
-      review: song.review,
+      review: [
+        {
+          id: song.review?.[0]?.id,
+          completedAt: song.review?.[0]?.completedAt,
+          text: song.review?.[0]?.text,
+        },
+      ],
     };
   }
 
@@ -148,7 +153,7 @@ export class SongController {
             1
         ), "inserted" AS (
           INSERT INTO
-            "Review" ("songId", "email")
+            "Review" ("songId", "reviewerEmail")
           SELECT
             "toReviewSong"."id", ${email}
           FROM
@@ -205,13 +210,31 @@ export class SongController {
     });
 
     // triggers email notification to song poster
-    await this.email.notifyOfReviewCompleted({
-      email: review.song.email,
-      songId: review.song.id,
-    });
-    this.logger.log(
-      `Emailing ${review.song.email} regarding ${review.song.id}`,
-    );
+    if (!review.songCreatorEmailedAt) {
+      try {
+        await this.email.notifyOfReviewCompleted({
+          email: review.song.email,
+          songId: review.song.id,
+        });
+        this.logger.log(
+          `Emailed ${review.song.email} regarding ${review.song.id}`,
+        );
+
+        await this.prisma.review.update({
+          data: {
+            songCreatorEmailedAt: new Date(),
+          },
+          where: {
+            id: reviewId,
+          },
+        });
+      } catch (err) {
+        this.logger.error(
+          `Failed to email and update db of submitted review ${reviewId}`,
+          err,
+        );
+      }
+    }
 
     return {
       id: review.id,
