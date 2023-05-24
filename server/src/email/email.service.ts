@@ -41,7 +41,7 @@ export class EmailService {
           },
         },
       },
-      FromEmailAddress: 'support@betatestsongs.com',
+      FromEmailAddress: 'notify@betatestsongs.com',
     });
     await this.ses.send(command);
   }
