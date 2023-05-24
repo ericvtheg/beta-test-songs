@@ -16,7 +16,7 @@ import Mixpanel from 'mixpanel';
             url: process.env.DATABASE_URL,
           },
           stage: process.env.STAGE,
-          mixPanel: {
+          mixpanel: {
             token: process.env.MIX_PANEL_TOKEN,
           },
         }),
@@ -34,8 +34,8 @@ import Mixpanel from 'mixpanel';
     PrismaService,
     {
       provide: 'MIXPANEL_TOKEN',
-      useFactory: (configService: ConfigService) =>
-        Mixpanel.init(configService.get('MIX_PANEL_TOKEN') as string, {
+      useFactory: (configService: ConfigService<any, true>) =>
+        Mixpanel.init(configService.get('mixpanel.token'), {
           protocol: 'https',
           keepAlive: 'true',
         }),
