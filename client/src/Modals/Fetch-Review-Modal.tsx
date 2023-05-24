@@ -30,10 +30,14 @@ export default function FetchReviewModal() {
           },
         });
       } catch (err: unknown | AxiosError) {
+        let is404 = false;
         if (axios.isAxiosError(err)) {
           if (err?.response?.status === 404) {
+            is404 = true;
             navigate("/no-songs-available");
           }
+        }
+        if (!is404) {
           console.error("err");
           navigate("/error");
         }
