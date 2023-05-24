@@ -9,6 +9,8 @@ import {
   ParseUUIDPipe,
   Inject,
   Query,
+  Ip,
+  Headers,
 } from '@nestjs/common';
 import {
   IsEmail,
@@ -90,6 +92,8 @@ export class SongController {
   async getSong(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('origin') origin: string,
+    @Ip() ip: string,
+    @Headers('BtsUuid') analyticsId: string,
   ): Promise<ISong> {
     const song = await this.prisma.song.findUnique({
       where: { id },
@@ -114,6 +118,8 @@ export class SongController {
       this.analytics.track('Fetched Song', {
         songId: id,
         origin: origin ?? 'direct',
+        ip,
+        distinct_id: analyticsId,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -138,6 +144,8 @@ export class SongController {
   @Post('/start-review')
   async startReview(
     @Body() { email }: StartReviewDto,
+    @Ip() ip: string,
+    @Headers('BtsUuid') analyticsId: string,
   ): Promise<ISongIncompleteReview> {
     const queryResult = await this.prisma.$queryRaw<
       { songId: string; link: string; reviewId: string; text: null }[]
@@ -187,6 +195,14 @@ export class SongController {
       `;
 
     if (queryResult.length === 0) {
+      try {
+        this.analytics.track('No Songs Available for Review', {
+          ip,
+          distinct_id: analyticsId,
+        });
+      } catch (err) {
+        this.logger.error('Failed to push event to mixpanel', err);
+      }
       throw new NotFoundException(
         'No songs available to review at the moment :(',
       );
@@ -198,6 +214,8 @@ export class SongController {
       this.analytics.track('Review Started', {
         songId,
         link,
+        ip,
+        distinct_id: analyticsId,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -214,7 +232,11 @@ export class SongController {
   }
 
   @Post('/submit-review')
-  async submitReview(@Body() payload: SubmitReviewDto): Promise<IReview> {
+  async submitReview(
+    @Body() payload: SubmitReviewDto,
+    @Ip() ip: string,
+    @Headers('BtsUuid') analyticsId: string,
+  ): Promise<IReview> {
     const { text, reviewId } = payload;
 
     // This isn't great. I think it'd be solved by having user accounts
@@ -264,6 +286,8 @@ export class SongController {
       this.analytics.track('Review Submitted', {
         songId: review.song.id,
         text,
+        ip,
+        distinct_id: analyticsId,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -277,7 +301,11 @@ export class SongController {
   }
 
   @Post('/submit-song')
-  async submitSong(@Body() payload: RequestReviewDto): Promise<void> {
+  async submitSong(
+    @Body() payload: RequestReviewDto,
+    @Ip() ip: string,
+    @Headers('BtsUuid') analyticsId: string,
+  ): Promise<void> {
     const { link, email } = payload;
     const song = await this.prisma.song.create({
       data: {
@@ -291,6 +319,8 @@ export class SongController {
         songId: song.id,
         link,
         email,
+        ip,
+        distinct_id: analyticsId,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
