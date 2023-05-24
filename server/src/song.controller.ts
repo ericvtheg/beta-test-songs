@@ -7,6 +7,8 @@ import {
   Post,
   Logger,
   ParseUUIDPipe,
+  Inject,
+  Query,
 } from '@nestjs/common';
 import {
   IsEmail,
@@ -18,6 +20,7 @@ import {
 } from 'class-validator';
 import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
+import { Mixpanel } from 'mixpanel';
 
 class StartReviewDto {
   @IsEmail()
@@ -80,10 +83,14 @@ export class SongController {
   constructor(
     private readonly prisma: PrismaService,
     private readonly email: EmailService,
+    @Inject('MIXPANEL_TOKEN') private readonly analytics: Mixpanel,
   ) {}
 
   @Get('id/:id')
-  async getSong(@Param('id', ParseUUIDPipe) id: string): Promise<ISong> {
+  async getSong(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query('origin') origin: string,
+  ): Promise<ISong> {
     const song = await this.prisma.song.findUnique({
       where: { id },
       include: {
@@ -101,6 +108,15 @@ export class SongController {
 
     if (!song) {
       throw new NotFoundException();
+    }
+
+    try {
+      this.analytics.track('Fetched Song', {
+        songId: id,
+        origin: origin ?? 'direct',
+      });
+    } catch (err) {
+      this.logger.error('Failed to push event to mixpanel', err);
     }
 
     return {
@@ -180,6 +196,15 @@ export class SongController {
 
     const { songId, link, reviewId, text } = queryResult[0];
 
+    try {
+      this.analytics.track('Review Started', {
+        songId,
+        link,
+      });
+    } catch (err) {
+      this.logger.error('Failed to push event to mixpanel', err);
+    }
+
     return {
       id: songId,
       link,
@@ -237,6 +262,15 @@ export class SongController {
       }
     }
 
+    try {
+      this.analytics.track('Review Submitted', {
+        songId: review.song.id,
+        text,
+      });
+    } catch (err) {
+      this.logger.error('Failed to push event to mixpanel', err);
+    }
+
     return {
       id: review.id,
       completedAt: review.completedAt,
@@ -247,11 +281,21 @@ export class SongController {
   @Post('/submit-song')
   async submitSong(@Body() payload: RequestReviewDto): Promise<void> {
     const { link, email } = payload;
-    await this.prisma.song.create({
+    const song = await this.prisma.song.create({
       data: {
         link,
         email,
       },
     });
+
+    try {
+      this.analytics.track('Song Submitted', {
+        songId: song.id,
+        link,
+        email,
+      });
+    } catch (err) {
+      this.logger.error('Failed to push event to mixpanel', err);
+    }
   }
 }

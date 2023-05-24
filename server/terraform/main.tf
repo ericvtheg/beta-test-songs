@@ -185,6 +185,7 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
       environment = [
         { "name" : "STAGE", "value" : var.stage },
         { "name" : "DATABASE_URL", "value" : var.db_url },
+        { "name" : "MIX_PANEL_TOKEN", "value" : var.mix_panel_token },
       ],
       logConfiguration = {
         logDriver = "awslogs",
@@ -276,3 +277,59 @@ resource "aws_acm_certificate" "beta-test-songs-cert" {
     create_before_destroy = true
   }
 }
+
+
+# SES
+# resource "aws_ses_domain_identity" "beta-test-songs-domain-identity" {
+#   domain = "${var.domain}"
+# }
+
+# resource "aws_route53_record" "beta-test-songs-domain-identity-records" {
+#   zone_id = "${var.zone_id}"
+#   name    = "_amazonses.betatestsongs.com"
+#   type    = "TXT"
+#   ttl     = "600"
+
+#   records = [
+#     "${aws_ses_domain_identity.beta-test-songs-domain-identity.verification_token}",
+#   ]
+# }
+
+# resource "aws_ses_domain_dkim" "beta-test-songs-dkim" {
+#   domain = "${aws_ses_domain_identity.beta-test-songs-domain-identity.domain}"
+# }
+
+# resource "aws_route53_record" "beta-test-songs-dkim-records" {
+#   count   = 3
+#   zone_id = "${var.zone_id}"
+#   name    = "${element(aws_ses_domain_dkim.beta-test-songs-dkim.dkim_tokens, count.index)}._domainkey.betatestsongs.com"
+#   type    = "CNAME"
+#   ttl     = "600"
+
+#   records = [
+#     "${element(aws_ses_domain_dkim.beta-test-songs-dkim.dkim_tokens, count.index)}.dkim.amazonses.com",
+#   ]
+# }
+
+# resource "aws_route53_record" "beta-test-songs-mx-records" {
+#   zone_id = "${var.zone_id}"
+#   name    = "${var.domain}"
+#   type    = "MX"
+#   ttl     = "600"
+
+#   records = [
+#     "10 inbound-smtp.us-east-2.amazonses.com", # west or east?
+#     "10 inbound-smtp.us-east-2.amazonaws.com",
+#   ]
+# }
+
+# resource "aws_route53_record" "beta-test-songs-spf-records" {
+#   zone_id = "${var.zone_id}"
+#   name    = "${var.domain}"
+#   type    = "TXT"
+#   ttl     = "600"
+
+#   records = [
+#     "v=spf1 include:amazonses.com -all",
+#   ]
+# }

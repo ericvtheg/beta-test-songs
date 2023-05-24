@@ -12,6 +12,7 @@ specifiers:
   '@prisma/client': 4.14.1
   '@types/express': ^4.17.13
   '@types/jest': 29.2.4
+  '@types/mixpanel': ^2.14.4
   '@types/mjml': ^4.7.1
   '@types/node': 18.11.18
   '@types/supertest': ^2.0.11
@@ -25,6 +26,7 @@ specifiers:
   eslint-plugin-prettier: ^4.0.0
   jest: 29.3.1
   joi: ^17.9.2
+  mixpanel: ^0.17.0
   mjml: ^4.14.1
   prettier: ^2.3.2
   prisma: ^4.14.1
@@ -50,6 +52,7 @@ dependencies:
   class-transformer: 0.5.1
   class-validator: 0.14.0
   joi: 17.9.2
+  mixpanel: 0.17.0
   mjml: 4.14.1
   prisma: 4.14.1
   reflect-metadata: 0.1.13
@@ -60,6 +63,7 @@ devDependencies:
   '@nestjs/testing': 9.4.0_adbpomi7iuzlxxwntv6inkfmju
   '@types/express': 4.17.17
   '@types/jest': 29.2.4
+  '@types/mixpanel': 2.14.4
   '@types/mjml': 4.7.1
   '@types/node': 18.11.18
   '@types/supertest': 2.0.12
@@ -2007,6 +2011,10 @@ packages:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
     dev: true
 
+  /@types/mixpanel/2.14.4:
+    resolution: {integrity: sha512-VVnwnH+m3043pVnzwq1FNG5KQf/vxWf5abi6F8qq4ph+wQ6i/SNZo+FK34ilH2ii6p07NELCgLMVztqocdqW3A==}
+    dev: true
+
   /@types/mjml-core/4.7.1:
     resolution: {integrity: sha512-k5IRafi93tyZBGF+0BTrcBDvG47OueI+Q7TC4V4UjGQn0AMVvL3Y+S26QF/UHMmMJW5r1hxLyv3StX2/+FatFg==}
     dev: true
@@ -2364,6 +2372,15 @@ packages:
     resolution: {integrity: sha512-xjIYgE8HBrkpd/sJqOGNspf8uHG+NOHGOw6a/Urj8taM2EXfdNAH2oFcPeIFfsv3+kz/mJrS5VuMqbNLjCa2vw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  /agent-base/6.0.2:
+    resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
+    engines: {node: '>= 6.0.0'}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /ajv-formats/2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
@@ -3016,7 +3033,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /dedent/0.7.0:
     resolution: {integrity: sha512-Q6fKUPqnAHAyhiUgFU7BUzLiv0kd8saH9al7tnu5Q/okj6dnupxyTgFIBjVzJATdfIAm9NAsvXNzjaKa+bxVyA==}
@@ -3875,6 +3891,16 @@ packages:
       setprototypeof: 1.2.0
       statuses: 2.0.1
       toidentifier: 1.0.1
+
+  /https-proxy-agent/5.0.0:
+    resolution: {integrity: sha512-EkYm5BcKUGiduxzSt3Eppko+PiNWNEpa4ySk9vTC6wDsQJW9rHSa+UhGNJoRYp7bz6Ht1eaRIa6QaJqO5rCFbA==}
+    engines: {node: '>= 6'}
+    dependencies:
+      agent-base: 6.0.2
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
 
   /human-signals/1.1.1:
     resolution: {integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==}
@@ -4891,6 +4917,15 @@ packages:
     engines: {node: '>=16 || 14 >=14.17'}
     dev: false
 
+  /mixpanel/0.17.0:
+    resolution: {integrity: sha512-DY5WeOy/hmkPrNiiZugJpWR0iMuOwuj1a3u0bgwB2eUFRV6oIew/pIahhpawdbNjb+Bye4a8ID3gefeNPvL81g==}
+    engines: {node: '>=10.0'}
+    dependencies:
+      https-proxy-agent: 5.0.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /mjml-accordion/4.14.1:
     resolution: {integrity: sha512-dpNXyjnhYwhM75JSjD4wFUa9JgHm86M2pa0CoTzdv1zOQz67ilc4BoK5mc2S0gOjJpjBShM5eOJuCyVIuAPC6w==}
     dependencies:
@@ -5265,7 +5300,6 @@ packages:
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
-    dev: true
 
   /ms/2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}

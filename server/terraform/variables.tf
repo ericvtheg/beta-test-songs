@@ -98,3 +98,8 @@ variable "dns_zone_id" {
   type      = string
   sensitive = true
 }
+
+variable "mix_panel_token" {
+  type = string
+  sensitive = true
+}
