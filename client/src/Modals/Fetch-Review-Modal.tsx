@@ -34,7 +34,6 @@ export default function FetchReviewModal() {
           if (err?.response?.status === 404) {
             navigate("/no-songs-available");
           }
-        } else {
           console.error("err");
           navigate("/error");
         }
@@ -92,7 +91,7 @@ export default function FetchReviewModal() {
                   </div>
                   <div className="m-auto">
                     <h6 className="text-gray-500">
-                      We&#39;re getting the next songs in the review queue...
+                      We&#39;re getting the next song in the review queue...
                     </h6>
                   </div>
                 </div>
