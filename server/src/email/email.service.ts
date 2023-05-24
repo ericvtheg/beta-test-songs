@@ -24,7 +24,7 @@ export class EmailService {
   }: IEmailParams): Promise<void> {
     const html = this.html.replace(
       '{{review_link}}',
-      `https://betatestsongs.com/song/id/${songId}`,
+      `https://betatestsongs.com/song/id/${songId}?origin=email`,
     );
 
     const command = new SendEmailCommand({
