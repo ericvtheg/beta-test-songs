@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SESClient } from '@aws-sdk/client-ses';
+import { SESv2Client } from '@aws-sdk/client-sesv2';
 import { EmailService } from './email.service';
 import { ConfigService } from '@nestjs/config';
 import { startLocalEmailServer } from './local-server';
@@ -17,10 +17,10 @@ import { startLocalEmailServer } from './local-server';
       inject: [ConfigService],
     },
     {
-      provide: SESClient,
+      provide: SESv2Client,
       useFactory: (configService: ConfigService) => {
         const isLocal = configService.get('STAGE') === 'local';
-        return new SESClient({
+        return new SESv2Client({
           region: 'us-east-2',
           endpoint: isLocal ? 'http://localhost:8005' : undefined,
         });
