@@ -256,7 +256,7 @@ export class SongController {
         });
       } catch (err) {
         this.logger.error(
-          `Failed to email and update db of submitted review ${reviewId}`,
+          `Failed to email ${review.song.email} and update db of submitted review for song ${review.song.id}`,
           err,
         );
       }
