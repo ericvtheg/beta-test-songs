@@ -45,6 +45,11 @@ resource "aws_iam_role_policy_attachment" "rds-policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonRDSDataFullAccess"
 }
 
+resource "aws_iam_role_policy_attachment" "ses-policy" {
+  role       = aws_iam_role.ecs_agent.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+}
+
 resource "aws_iam_instance_profile" "ecs_agent" {
   name = "ecs-agent"
   role = aws_iam_role.ecs_agent.name
