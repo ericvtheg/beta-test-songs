@@ -1,4 +1,4 @@
-import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2';
 import { Injectable } from '@nestjs/common';
 import mjml2html from 'mjml';
 import { readFileSync } from 'fs';
@@ -12,7 +12,7 @@ interface IEmailParams {
 @Injectable()
 export class EmailService {
   private html: string;
-  constructor(private readonly ses: SESClient) {
+  constructor(private readonly ses: SESv2Client) {
     const emailFilePath = path.join(__dirname, './pages/song-reviewed.mjml');
     const tpl = readFileSync(emailFilePath).toString();
     this.html = mjml2html(tpl, { minify: true }).html;
@@ -29,15 +29,19 @@ export class EmailService {
 
     const command = new SendEmailCommand({
       Destination: { ToAddresses: [email] },
-      Message: {
-        Subject: { Data: 'Your Song Has Been Reviewed' },
-        Body: {
-          Html: {
-            Data: html,
+      Content: {
+        Simple: {
+          Subject: {
+            Data: 'Your Song Has Been Reviewed',
+          },
+          Body: {
+            Html: {
+              Data: html,
+            },
           },
         },
       },
-      Source: 'someemail@gmail.com', // TODO add system email
+      FromEmailAddress: 'support@betatestsongs.com',
     });
     await this.ses.send(command);
   }
