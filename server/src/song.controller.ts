@@ -58,7 +58,7 @@ interface ISong {
   createdAt: Date;
   link: string;
   email: string;
-  review: IReview[];
+  review?: IReview;
 }
 
 interface IReview {
@@ -126,14 +126,12 @@ export class SongController {
       createdAt: song.createdAt,
       review:
         song.review.length === 0
-          ? []
-          : [
-              {
-                id: song.review?.[0]?.id,
-                completedAt: song.review?.[0]?.completedAt,
-                text: song.review?.[0]?.text,
-              },
-            ],
+          ? undefined
+          : {
+              id: song.review?.[0]?.id,
+              completedAt: song.review?.[0]?.completedAt,
+              text: song.review?.[0]?.text,
+            },
     };
   }
 
