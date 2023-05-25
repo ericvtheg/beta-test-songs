@@ -69,8 +69,8 @@ output "db_host" {
   sensitive = true
 }
 
-variable aws_account_id {
-  type = string
+variable "aws_account_id" {
+  type      = string
   sensitive = true
 }
 
@@ -89,8 +89,8 @@ variable "db_password" {
   sensitive = true
 }
 
-variable db_url {
-  type = string
+variable "db_url" {
+  type      = string
   sensitive = true
 }
 
@@ -100,6 +100,6 @@ variable "dns_zone_id" {
 }
 
 variable "mix_panel_token" {
-  type = string
+  type      = string
   sensitive = true
 }

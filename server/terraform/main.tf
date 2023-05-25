@@ -9,10 +9,10 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_dns_hostnames   = true
-  
+  enable_dns_hostnames = true
+
   enable_nat_gateway     = true
-  single_nat_gateway = true
+  single_nat_gateway     = true
   one_nat_gateway_per_az = false
 }
 
@@ -151,8 +151,11 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
   health_check_grace_period = 300
 
   launch_configuration = aws_launch_configuration.beta-test-songs-launch-config.name
-  min_size             = 1
-  max_size             = 3
+
+  min_size         = 1
+  max_size         = 6
+
+  target_group_arns = [aws_alb_target_group.beta-test-songs-alb-target-group.arn]
 
   # can use mixed instances
   # should I just do fargate?
@@ -164,6 +167,24 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
   }
 
   vpc_zone_identifier = module.vpc.private_subnets
+}
+
+resource "aws_autoscaling_policy" "beta-test-songs-asg-policy" {
+  name                   = "beta-test-songs-cpu-scaling"
+  autoscaling_group_name = aws_autoscaling_group.beta-test-songs-asg.name
+  policy_type            = "PredictiveScaling"
+
+  predictive_scaling_configuration {
+    mode                   = "ForecastAndScale"
+    scheduling_buffer_time = 0
+    metric_specification {
+      target_value = 30
+      predefined_metric_pair_specification {
+        predefined_metric_type = "ASGCPUUtilization"
+        # label = aws_alb_target_group.beta-test-songs-alb-target-group.name
+      }
+    }
+  }
 }
 
 ### ECS
@@ -212,12 +233,12 @@ resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
 }
 
 resource "aws_ecs_service" "beta-test-songs-ecs-service" {
-  name            = var.service
-  task_definition = aws_ecs_task_definition.beta-test-songs-task-definition.arn
-  cluster         = aws_ecs_cluster.beta-test-songs-cluster.id
-  desired_count   = 1
+  name                               = var.service
+  task_definition                    = aws_ecs_task_definition.beta-test-songs-task-definition.arn
+  cluster                            = aws_ecs_cluster.beta-test-songs-cluster.id
+  desired_count                      = 1
   deployment_minimum_healthy_percent = 0
-  
+
 
   load_balancer {
     target_group_arn = aws_alb_target_group.beta-test-songs-alb-target-group.arn
@@ -265,8 +286,8 @@ resource "aws_alb_target_group" "beta-test-songs-alb-target-group" {
   vpc_id   = module.vpc.vpc_id
 
   health_check {
-    matcher="200"
-    path="/api/health"
+    matcher = "200"
+    path    = "/api/health"
   }
 
   lifecycle {
