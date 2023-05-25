@@ -169,8 +169,8 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
   vpc_zone_identifier = module.vpc.private_subnets
 }
 
-resource "aws_autoscaling_policy" "beta-test-songs-asg-policy" {
-  name                   = "beta-test-songs-cpu-scaling"
+resource "aws_autoscaling_policy" "beta-test-songs-asg-predictive-policy" {
+  name                   = "beta-test-songs-predictive-cpu-scaling"
   autoscaling_group_name = aws_autoscaling_group.beta-test-songs-asg.name
   policy_type            = "PredictiveScaling"
 
@@ -184,6 +184,20 @@ resource "aws_autoscaling_policy" "beta-test-songs-asg-policy" {
         # label = aws_alb_target_group.beta-test-songs-alb-target-group.name
       }
     }
+  }
+}
+
+resource "aws_autoscaling_policy" "beta-test-songs-asg-tracking-policy" {
+  name                   = "beta-test-songs-target-cpu-scaling"
+  autoscaling_group_name = aws_autoscaling_group.beta-test-songs-asg.name
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 30.0
   }
 }
 
