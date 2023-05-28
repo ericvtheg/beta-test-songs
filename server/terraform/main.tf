@@ -153,14 +153,9 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
   launch_configuration = aws_launch_configuration.beta-test-songs-launch-config.name
 
   min_size         = 1
-  max_size         = 6
+  max_size         = 4
 
   target_group_arns = [aws_alb_target_group.beta-test-songs-alb-target-group.arn]
-
-  # can use mixed instances
-  # should I just do fargate?
-  # use ec2 free tier for ssh tunneling to rds
-  # do some thresholds for scaling more instances
 
   lifecycle {
     create_before_destroy = true
@@ -181,7 +176,6 @@ resource "aws_autoscaling_policy" "beta-test-songs-asg-predictive-policy" {
       target_value = 30
       predefined_metric_pair_specification {
         predefined_metric_type = "ASGCPUUtilization"
-        # label = aws_alb_target_group.beta-test-songs-alb-target-group.name
       }
     }
   }
@@ -209,17 +203,19 @@ resource "aws_ecs_cluster" "beta-test-songs-cluster" {
 resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
   family             = "${local.prefix}-${var.stage}"
   execution_role_arn = aws_iam_role.ecs_agent.arn
+  network_mode = "bridge"
+  requires_compatibilities = ["EC2"]
   container_definitions = jsonencode([
     {
       name      = "${local.prefix}-${var.stage}"
       image     = "${var.aws_account_id}.dkr.ecr.${local.aws_region}.amazonaws.com/${local.prefix}-repo-${var.stage}:${var.image_tag}"
-      cpu       = 1024
-      memory    = 800
+      cpu       = 820
+      memory    = 410
       essential = true
       portMappings = [
         {
           containerPort = 3000
-          hostPort      = 3000
+          # hostPort      = 3000
         }
       ],
       environment = [
@@ -250,8 +246,8 @@ resource "aws_ecs_service" "beta-test-songs-ecs-service" {
   name                               = var.service
   task_definition                    = aws_ecs_task_definition.beta-test-songs-task-definition.arn
   cluster                            = aws_ecs_cluster.beta-test-songs-cluster.id
-  desired_count                      = 1
-  deployment_minimum_healthy_percent = 0
+  desired_count                      = 2
+  deployment_minimum_healthy_percent = 50
 
 
   load_balancer {
@@ -260,6 +256,10 @@ resource "aws_ecs_service" "beta-test-songs-ecs-service" {
     container_port   = 3000
   }
 }
+
+# TODO
+# scale tasks based on usage
+# fix deployments breaking system
 
 ### ALB
 resource "aws_alb" "beta-test-songs-alb" {
