@@ -191,7 +191,7 @@ resource "aws_autoscaling_policy" "beta-test-songs-asg-tracking-policy" {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
 
-    target_value = 30.0
+    target_value = 60.0
   }
 }
 
