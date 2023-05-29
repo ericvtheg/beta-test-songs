@@ -29,7 +29,7 @@ export default function ReviewSuccessModal() {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full place-items-center justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -65,7 +65,7 @@ export default function ReviewSuccessModal() {
                       <div className="mt-2">
                         <p className="text-sm text-gray-500">
                           Thank you for taking the time to review another
-                          producer&#39;s song!
+                          producer&#39;s song.
                         </p>
                       </div>
                     </div>
@@ -80,7 +80,7 @@ export default function ReviewSuccessModal() {
                   </Link>
                   <Link
                     to="/submit"
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:w-auto"
                   >
                     Submit a Song
                   </Link>

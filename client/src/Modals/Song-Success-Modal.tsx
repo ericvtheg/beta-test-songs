@@ -29,7 +29,7 @@ export default function SongSuccessModal() {
         </Transition.Child>
 
         <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="flex min-h-full place-items-center justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -41,7 +41,7 @@ export default function SongSuccessModal() {
             >
               <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
                 <div className="flex flex-row-reverse">
-                  <Link to="/" className="">
+                  <Link to="/">
                     <div className="px-2 pt-2">
                       <XMarkIcon className="h-5 w-6 text-gray-900 hover:text-gray-600" />
                     </div>
