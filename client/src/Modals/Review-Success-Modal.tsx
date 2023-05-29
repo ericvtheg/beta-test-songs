@@ -71,18 +71,18 @@ export default function ReviewSuccessModal() {
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                  <Link
-                    to="/review"
-                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
-                  >
-                    Review Another Song
-                  </Link>
+                <div className="bg-gray-50 px-4 py-3 flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:space-x-4 place-content-end">
                   <Link
                     to="/submit"
                     className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:w-auto"
                   >
                     Submit a Song
+                  </Link>
+                  <Link
+                    to="/review"
+                    className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:w-auto"
+                  >
+                    Review Another Song
                   </Link>
                 </div>
               </Dialog.Panel>
