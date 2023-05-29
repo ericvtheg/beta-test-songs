@@ -49,7 +49,8 @@ variable "private_subnets" {
 }
 
 variable "image_tag" {
-  type = string
+  type    = string
+  default = "latest"
 }
 
 variable "domain_name" {
