@@ -15,7 +15,7 @@ export default function Header() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
-          <Link to="/" className="-m-1.5 p-1.5">
+          <Link to="/" className="-m-1.5 p-1.5" aria-label="Navigate to home page">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
