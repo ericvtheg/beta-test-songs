@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "deploy": "pnpm build && (cd terraform && terraform apply)"
+    "deploy": "pnpm build && (cd terraform && terraform apply -auto-approve)"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
