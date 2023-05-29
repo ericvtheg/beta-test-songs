@@ -279,11 +279,11 @@ resource "aws_appautoscaling_policy" "ecs-policy" {
   step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
     cooldown                = 60
-    metric_aggregation_type = "Maximum"
+    metric_aggregation_type = "Maximum" // what is this doing
 
     step_adjustment {
       metric_interval_upper_bound = 0
-      scaling_adjustment          = -1
+      scaling_adjustment          = -2
     }
   }
 }
@@ -291,9 +291,9 @@ resource "aws_appautoscaling_policy" "ecs-policy" {
 resource "aws_appautoscaling_policy" "ecs-targettracking" {
   name               = "ECSServiceAverageCPUUtilization:${aws_appautoscaling_target.ecs-scaling-target.resource_id}"
   policy_type        = "TargetTrackingScaling"
-  resource_id        = "${aws_appautoscaling_target.ecs-scaling-target.resource_id}"
-  scalable_dimension = "${aws_appautoscaling_target.ecs-scaling-target.scalable_dimension}"
-  service_namespace  = "${aws_appautoscaling_target.ecs-scaling-target.service_namespace}"
+  resource_id        = aws_appautoscaling_target.ecs-scaling-target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs-scaling-target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs-scaling-target.service_namespace
 
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
