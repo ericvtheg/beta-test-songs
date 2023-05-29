@@ -152,8 +152,8 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
 
   launch_configuration = aws_launch_configuration.beta-test-songs-launch-config.name
 
-  min_size         = 1
-  max_size         = 4
+  min_size = 1
+  max_size = 4
 
   target_group_arns = [aws_alb_target_group.beta-test-songs-alb-target-group.arn]
 
@@ -201,9 +201,9 @@ resource "aws_ecs_cluster" "beta-test-songs-cluster" {
 }
 
 resource "aws_ecs_task_definition" "beta-test-songs-task-definition" {
-  family             = "${local.prefix}-${var.stage}"
-  execution_role_arn = aws_iam_role.ecs_agent.arn
-  network_mode = "bridge"
+  family                   = "${local.prefix}-${var.stage}"
+  execution_role_arn       = aws_iam_role.ecs_agent.arn
+  network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
   container_definitions = jsonencode([
     {
