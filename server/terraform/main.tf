@@ -153,7 +153,7 @@ resource "aws_autoscaling_group" "beta-test-songs-asg" {
   launch_configuration = aws_launch_configuration.beta-test-songs-launch-config.name
 
   min_size = 1
-  max_size = 4
+  max_size = 3
 
   target_group_arns = [aws_alb_target_group.beta-test-songs-alb-target-group.arn]
 
@@ -173,7 +173,7 @@ resource "aws_autoscaling_policy" "beta-test-songs-asg-predictive-policy" {
     mode                   = "ForecastAndScale"
     scheduling_buffer_time = 0
     metric_specification {
-      target_value = 30
+      target_value = 50
       predefined_metric_pair_specification {
         predefined_metric_type = "ASGCPUUtilization"
       }
@@ -191,7 +191,7 @@ resource "aws_autoscaling_policy" "beta-test-songs-asg-tracking-policy" {
       predefined_metric_type = "ASGAverageCPUUtilization"
     }
 
-    target_value = 60.0
+    target_value = 50
   }
 }
 
@@ -255,11 +255,54 @@ resource "aws_ecs_service" "beta-test-songs-ecs-service" {
     container_name   = aws_ecs_task_definition.beta-test-songs-task-definition.family
     container_port   = 3000
   }
+
+  lifecycle {
+    ignore_changes = [desired_count]
+  }
 }
 
-# TODO
-# scale tasks based on usage
-# fix deployments breaking system
+resource "aws_appautoscaling_target" "ecs-scaling-target" {
+  max_capacity       = 6
+  min_capacity       = 2
+  resource_id        = "service/${aws_ecs_cluster.beta-test-songs-cluster.name}/${aws_ecs_service.beta-test-songs-ecs-service.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "ecs-policy" {
+  name               = "ScaleDown:${aws_appautoscaling_target.ecs-scaling-target.resource_id}"
+  policy_type        = "StepScaling"
+  resource_id        = aws_appautoscaling_target.ecs-scaling-target.resource_id
+  scalable_dimension = aws_appautoscaling_target.ecs-scaling-target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.ecs-scaling-target.service_namespace
+
+  step_scaling_policy_configuration {
+    adjustment_type         = "ChangeInCapacity"
+    cooldown                = 60
+    metric_aggregation_type = "Maximum"
+
+    step_adjustment {
+      metric_interval_upper_bound = 0
+      scaling_adjustment          = -1
+    }
+  }
+}
+
+resource "aws_appautoscaling_policy" "ecs-targettracking" {
+  name               = "ECSServiceAverageCPUUtilization:${aws_appautoscaling_target.ecs-scaling-target.resource_id}"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = "${aws_appautoscaling_target.ecs-scaling-target.resource_id}"
+  scalable_dimension = "${aws_appautoscaling_target.ecs-scaling-target.scalable_dimension}"
+  service_namespace  = "${aws_appautoscaling_target.ecs-scaling-target.service_namespace}"
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+
+    target_value = 30
+  }
+}
 
 ### ALB
 resource "aws_alb" "beta-test-songs-alb" {
