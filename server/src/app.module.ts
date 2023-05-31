@@ -6,6 +6,7 @@ import { EmailModule } from './email/email.module';
 import { HealthController } from './health.controller';
 import * as Joi from 'joi';
 import Mixpanel from 'mixpanel';
+import { VisitController } from './visit.controller';
 
 @Module({
   imports: [
@@ -42,6 +43,6 @@ import Mixpanel from 'mixpanel';
       inject: [ConfigService],
     },
   ],
-  controllers: [SongController, HealthController],
+  controllers: [SongController, VisitController, HealthController],
 })
 export class AppModule {}

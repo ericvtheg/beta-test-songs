@@ -14,6 +14,9 @@ import SongSuccessModal from "./Modals/Song-Success-Modal";
 import ReviewSuccessModal from "./Modals/Review-Success-Modal";
 import NoSongsAvailableModal from "./Modals/No-Songs-Available";
 import Error from "./Pages/Error";
+import { useEffect } from "react";
+import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -32,6 +35,35 @@ const router = createBrowserRouter(
 );
 
 export default function App() {
+  useEffect(() => {
+    if (import.meta.env.DEV) {
+      document.getElementById('favicon')?.setAttribute('href', '/favicon-y.ico');
+    }
+
+    let firstVisit = false;
+    
+    let btsUuid = localStorage.getItem('bts_uuid');
+    if (!btsUuid){
+      btsUuid = uuidv4();
+      localStorage.setItem('bts_uuid', btsUuid);
+      firstVisit = true;
+    }
+    axios.defaults.headers.common['BtsUuid'] = btsUuid;
+
+    const trackVisit = async (firstVisit: boolean) => {
+      try{
+        if (firstVisit) {
+          await axios.post("/api/visit/first");
+        } else {
+          await axios.post("/api/visit")
+        }
+      } catch (err) {
+        console.error("Failed to inform server of visit")
+      }
+    }
+    trackVisit(firstVisit);
+  }, [])
+
   return (
     <>
       <RouterProvider router={router} />
