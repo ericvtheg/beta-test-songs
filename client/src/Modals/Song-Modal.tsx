@@ -131,7 +131,7 @@ export default function SongModal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white pl-8 pb-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white pl-4 md:pl-8 pb-6 text-left align-middle shadow-xl transition-all">
                 <div className="flex flex-row-reverse">
                   <Link to="/" className="">
                     <div className="px-2 pt-2">
