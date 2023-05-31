@@ -1,6 +1,7 @@
 import { Controller, Post, Headers, Inject, Logger } from '@nestjs/common';
 import { Mixpanel } from 'mixpanel';
 import { IpAddress } from './decorators/ip.decorator';
+import { UserAgent, IUserAgent } from './decorators/user-agent.decorator';
 
 @Controller('visit')
 export class VisitController {
@@ -11,11 +12,13 @@ export class VisitController {
   async visit(
     @IpAddress() ip: string,
     @Headers('BtsUuid') analyticsId: string,
+    @UserAgent() userAgent: IUserAgent,
   ) {
     try {
       this.analytics.track('Visited Landing Page', {
         $ip: ip,
         distinct_id: analyticsId,
+        ...userAgent,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -26,11 +29,13 @@ export class VisitController {
   async firstVisit(
     @IpAddress() ip: string,
     @Headers('BtsUuid') analyticsId: string,
+    @UserAgent() userAgent: IUserAgent,
   ) {
     try {
       this.analytics.track('First Visit', {
         $ip: ip,
         distinct_id: analyticsId,
+        ...userAgent,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
