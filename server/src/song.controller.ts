@@ -22,7 +22,7 @@ import {
 import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
 import { Mixpanel } from 'mixpanel';
-import { IpAddress } from './ip.decorator';
+import { IpAddress } from './decorators/ip.decorator';
 
 class StartReviewDto {
   @IsEmail()

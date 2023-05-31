@@ -1,6 +1,6 @@
 import { Controller, Post, Headers, Inject, Logger } from '@nestjs/common';
 import { Mixpanel } from 'mixpanel';
-import { IpAddress } from './ip.decorator';
+import { IpAddress } from './decorators/ip.decorator';
 
 @Controller('visit')
 export class VisitController {
