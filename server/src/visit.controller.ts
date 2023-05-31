@@ -10,7 +10,7 @@ export class VisitController {
   async visit(@Ip() ip: string, @Headers('BtsUuid') analyticsId: string) {
     try {
       this.analytics.track('Visited Landing Page', {
-        ip,
+        $ip: ip,
         distinct_id: analyticsId,
       });
     } catch (err) {
@@ -22,7 +22,7 @@ export class VisitController {
   async firstVisit(@Ip() ip: string, @Headers('BtsUuid') analyticsId: string) {
     try {
       this.analytics.track('First Visit', {
-        ip,
+        $ip: ip,
         distinct_id: analyticsId,
       });
     } catch (err) {

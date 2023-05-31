@@ -118,7 +118,7 @@ export class SongController {
       this.analytics.track('Fetched Song', {
         songId: id,
         origin: origin ?? 'direct',
-        ip,
+        $ip: ip,
         distinct_id: analyticsId,
       });
     } catch (err) {
@@ -197,7 +197,7 @@ export class SongController {
     if (queryResult.length === 0) {
       try {
         this.analytics.track('No Songs Available for Review', {
-          ip,
+          $ip: ip,
           distinct_id: analyticsId,
         });
       } catch (err) {
@@ -214,7 +214,7 @@ export class SongController {
       this.analytics.track('Review Started', {
         songId,
         link,
-        ip,
+        $ip: ip,
         distinct_id: analyticsId,
       });
     } catch (err) {
@@ -286,7 +286,7 @@ export class SongController {
       this.analytics.track('Review Submitted', {
         songId: review.song.id,
         text,
-        ip,
+        $ip: ip,
         distinct_id: analyticsId,
       });
     } catch (err) {
@@ -319,7 +319,7 @@ export class SongController {
         songId: song.id,
         link,
         email,
-        ip,
+        $ip: ip,
         distinct_id: analyticsId,
       });
     } catch (err) {
