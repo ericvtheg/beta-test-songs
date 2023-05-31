@@ -9,7 +9,6 @@ import {
   ParseUUIDPipe,
   Inject,
   Query,
-  Ip,
   Headers,
 } from '@nestjs/common';
 import {
@@ -23,6 +22,7 @@ import {
 import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
 import { Mixpanel } from 'mixpanel';
+import { IpAddress } from './ip.decorator';
 
 class StartReviewDto {
   @IsEmail()
@@ -92,7 +92,7 @@ export class SongController {
   async getSong(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('origin') origin: string,
-    @Ip() ip: string,
+    @IpAddress() ip: string,
     @Headers('BtsUuid') analyticsId: string,
   ): Promise<ISong> {
     const song = await this.prisma.song.findUnique({
@@ -144,7 +144,7 @@ export class SongController {
   @Post('/start-review')
   async startReview(
     @Body() { email }: StartReviewDto,
-    @Ip() ip: string,
+    @IpAddress() ip: string,
     @Headers('BtsUuid') analyticsId: string,
   ): Promise<ISongIncompleteReview> {
     const queryResult = await this.prisma.$queryRaw<
@@ -234,7 +234,7 @@ export class SongController {
   @Post('/submit-review')
   async submitReview(
     @Body() payload: SubmitReviewDto,
-    @Ip() ip: string,
+    @IpAddress() ip: string,
     @Headers('BtsUuid') analyticsId: string,
   ): Promise<IReview> {
     const { text, reviewId } = payload;
@@ -303,7 +303,7 @@ export class SongController {
   @Post('/submit-song')
   async submitSong(
     @Body() payload: RequestReviewDto,
-    @Ip() ip: string,
+    @IpAddress() ip: string,
     @Headers('BtsUuid') analyticsId: string,
   ): Promise<void> {
     const { link, email } = payload;

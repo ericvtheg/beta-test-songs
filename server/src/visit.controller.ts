@@ -1,5 +1,6 @@
-import { Controller, Post, Ip, Headers, Inject, Logger } from '@nestjs/common';
+import { Controller, Post, Headers, Inject, Logger } from '@nestjs/common';
 import { Mixpanel } from 'mixpanel';
+import { IpAddress } from './ip.decorator';
 
 @Controller('visit')
 export class VisitController {
@@ -7,7 +8,10 @@ export class VisitController {
   constructor(@Inject('MIXPANEL_TOKEN') private readonly analytics: Mixpanel) {}
 
   @Post()
-  async visit(@Ip() ip: string, @Headers('BtsUuid') analyticsId: string) {
+  async visit(
+    @IpAddress() ip: string,
+    @Headers('BtsUuid') analyticsId: string,
+  ) {
     try {
       this.analytics.track('Visited Landing Page', {
         $ip: ip,
@@ -19,7 +23,10 @@ export class VisitController {
   }
 
   @Post('first')
-  async firstVisit(@Ip() ip: string, @Headers('BtsUuid') analyticsId: string) {
+  async firstVisit(
+    @IpAddress() ip: string,
+    @Headers('BtsUuid') analyticsId: string,
+  ) {
     try {
       this.analytics.track('First Visit', {
         $ip: ip,
