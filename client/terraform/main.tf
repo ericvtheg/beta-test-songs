@@ -145,7 +145,11 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
 
     forwarded_values {
       query_string = true
-      headers      = ["Origin", "Host"]
+      headers      = [
+        "Origin", "Host", "CloudFront-Is-Desktop-Viewer", "CloudFront-Is-Mobile-Viewer", "CloudFront-Is-Tablet-Viewer", 
+        "CloudFront-Viewer-City", "CloudFront-Viewer-Country-Region-Name", "CloudFront-Viewer-Latitude", 
+        "CloudFront-Viewer-Longitude", "CloudFront-Viewer-Time-Zone", "CloudFront-Viewer-Address", "User-Agent"
+      ]
 
       cookies {
         forward = "none"

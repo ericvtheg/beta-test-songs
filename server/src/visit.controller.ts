@@ -1,7 +1,6 @@
-import { Controller, Post, Headers, Inject, Logger } from '@nestjs/common';
+import { Controller, Post, Inject, Logger } from '@nestjs/common';
 import { Mixpanel } from 'mixpanel';
-import { IpAddress } from './decorators/ip.decorator';
-import { UserAgent, IUserAgent } from './decorators/user-agent.decorator';
+import { Analytics, IRequestAnalytics } from './decorators/analytics.decorator';
 
 @Controller('visit')
 export class VisitController {
@@ -9,34 +8,18 @@ export class VisitController {
   constructor(@Inject('MIXPANEL_TOKEN') private readonly analytics: Mixpanel) {}
 
   @Post()
-  async visit(
-    @IpAddress() ip: string,
-    @Headers('BtsUuid') analyticsId: string,
-    @UserAgent() userAgent: IUserAgent,
-  ) {
+  async visit(@Analytics() analytics: IRequestAnalytics) {
     try {
-      this.analytics.track('Visited Landing Page', {
-        $ip: ip,
-        distinct_id: analyticsId,
-        ...userAgent,
-      });
+      this.analytics.track('Visited', analytics);
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
     }
   }
 
   @Post('first')
-  async firstVisit(
-    @IpAddress() ip: string,
-    @Headers('BtsUuid') analyticsId: string,
-    @UserAgent() userAgent: IUserAgent,
-  ) {
+  async firstVisit(@Analytics() analytics: IRequestAnalytics) {
     try {
-      this.analytics.track('First Visit', {
-        $ip: ip,
-        distinct_id: analyticsId,
-        ...userAgent,
-      });
+      this.analytics.track('First Visit', analytics);
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
     }

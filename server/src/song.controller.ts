@@ -9,7 +9,6 @@ import {
   ParseUUIDPipe,
   Inject,
   Query,
-  Headers,
 } from '@nestjs/common';
 import {
   IsEmail,
@@ -22,8 +21,7 @@ import {
 import { EmailService } from './email/email.service';
 import { PrismaService } from './prisma.service';
 import { Mixpanel } from 'mixpanel';
-import { IpAddress } from './decorators/ip.decorator';
-import { UserAgent, IUserAgent } from './decorators/user-agent.decorator';
+import { Analytics, IRequestAnalytics } from './decorators/analytics.decorator';
 
 class StartReviewDto {
   @IsEmail()
@@ -93,9 +91,7 @@ export class SongController {
   async getSong(
     @Param('id', ParseUUIDPipe) id: string,
     @Query('origin') origin: string,
-    @IpAddress() ip: string,
-    @Headers('BtsUuid') analyticsId: string,
-    @UserAgent() userAgent: IUserAgent,
+    @Analytics() analytics: IRequestAnalytics,
   ): Promise<ISong> {
     const song = await this.prisma.song.findUnique({
       where: { id },
@@ -120,9 +116,7 @@ export class SongController {
       this.analytics.track('Fetched Song', {
         songId: id,
         origin: origin ?? 'direct',
-        $ip: ip,
-        distinct_id: analyticsId,
-        ...userAgent,
+        ...analytics,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -147,9 +141,7 @@ export class SongController {
   @Post('/start-review')
   async startReview(
     @Body() { email }: StartReviewDto,
-    @IpAddress() ip: string,
-    @Headers('BtsUuid') analyticsId: string,
-    @UserAgent() userAgent: IUserAgent,
+    @Analytics() analytics: IRequestAnalytics,
   ): Promise<ISongIncompleteReview> {
     const queryResult = await this.prisma.$queryRaw<
       { songId: string; link: string; reviewId: string; text: null }[]
@@ -200,11 +192,7 @@ export class SongController {
 
     if (queryResult.length === 0) {
       try {
-        this.analytics.track('No Songs Available for Review', {
-          $ip: ip,
-          distinct_id: analyticsId,
-          ...userAgent,
-        });
+        this.analytics.track('No Songs Available for Review', analytics);
       } catch (err) {
         this.logger.error('Failed to push event to mixpanel', err);
       }
@@ -219,9 +207,7 @@ export class SongController {
       this.analytics.track('Review Started', {
         songId,
         link,
-        $ip: ip,
-        distinct_id: analyticsId,
-        ...userAgent,
+        ...analytics,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -240,9 +226,7 @@ export class SongController {
   @Post('/submit-review')
   async submitReview(
     @Body() payload: SubmitReviewDto,
-    @IpAddress() ip: string,
-    @Headers('BtsUuid') analyticsId: string,
-    @UserAgent() userAgent: IUserAgent,
+    @Analytics() analytics: IRequestAnalytics,
   ): Promise<IReview> {
     const { text, reviewId } = payload;
 
@@ -293,9 +277,7 @@ export class SongController {
       this.analytics.track('Review Submitted', {
         songId: review.song.id,
         text,
-        $ip: ip,
-        distinct_id: analyticsId,
-        ...userAgent,
+        ...analytics,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);
@@ -311,9 +293,7 @@ export class SongController {
   @Post('/submit-song')
   async submitSong(
     @Body() payload: RequestReviewDto,
-    @IpAddress() ip: string,
-    @Headers('BtsUuid') analyticsId: string,
-    @UserAgent() userAgent: IUserAgent,
+    @Analytics() analytics: IRequestAnalytics,
   ): Promise<void> {
     const { link, email } = payload;
     const song = await this.prisma.song.create({
@@ -328,9 +308,7 @@ export class SongController {
         songId: song.id,
         link,
         email,
-        $ip: ip,
-        distinct_id: analyticsId,
-        ...userAgent,
+        ...analytics,
       });
     } catch (err) {
       this.logger.error('Failed to push event to mixpanel', err);

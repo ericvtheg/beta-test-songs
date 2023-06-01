@@ -15,7 +15,6 @@ specifiers:
   '@types/mixpanel': ^2.14.4
   '@types/mjml': ^4.7.1
   '@types/node': 18.11.18
-  '@types/request-ip': ^0.0.37
   '@types/supertest': ^2.0.11
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.0.0
@@ -32,7 +31,6 @@ specifiers:
   prettier: ^2.3.2
   prisma: ^4.14.1
   reflect-metadata: ^0.1.13
-  request-ip: ^3.3.0
   rxjs: ^7.2.0
   source-map-support: ^0.5.20
   supertest: ^6.1.3
@@ -58,7 +56,6 @@ dependencies:
   mjml: 4.14.1
   prisma: 4.14.1
   reflect-metadata: 0.1.13
-  request-ip: 3.3.0
   rxjs: 7.8.1
 
 devDependencies:
@@ -69,7 +66,6 @@ devDependencies:
   '@types/mixpanel': 2.14.4
   '@types/mjml': 4.7.1
   '@types/node': 18.11.18
-  '@types/request-ip': 0.0.37
   '@types/supertest': 2.0.12
   '@typescript-eslint/eslint-plugin': 5.59.1_jsr5owskg7irefkzbmq6cipclm
   '@typescript-eslint/parser': 5.59.1_tbtvr3a5zwdiktqy4vlmx63mqq
@@ -2054,12 +2050,6 @@ packages:
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
-    dev: true
-
-  /@types/request-ip/0.0.37:
-    resolution: {integrity: sha512-uw6/i3rQnpznxD7LtLaeuZytLhKZK6bRoTS6XVJlwxIOoOpEBU7bgKoVXDNtOg4Xl6riUKHa9bjMVrL6ESqYlQ==}
-    dependencies:
-      '@types/node': 18.11.18
     dev: true
 
   /@types/semver/7.3.13:
@@ -5793,10 +5783,6 @@ packages:
   /relateurl/0.2.7:
     resolution: {integrity: sha512-G08Dxvm4iDN3MLM0EsP62EDV9IuhXPR6blNz6Utcp7zyV3tr4HVNINt6MpaRWbxoOHT3Q7YN2P+jaHX8vUbgog==}
     engines: {node: '>= 0.10'}
-    dev: false
-
-  /request-ip/3.3.0:
-    resolution: {integrity: sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==}
     dev: false
 
   /require-directory/2.1.1:
