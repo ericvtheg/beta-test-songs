@@ -143,24 +143,62 @@ resource "aws_cloudfront_distribution" "beta-test-songs-frontend-distribution" {
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = "BACKEND_ALB_ORIGIN_ID"
 
-    forwarded_values {
-      query_string = true
-      headers      = [
-        "Origin", "Host", "CloudFront-Is-Desktop-Viewer", "CloudFront-Is-Mobile-Viewer", "CloudFront-Is-Tablet-Viewer", 
-        "CloudFront-Viewer-City", "CloudFront-Viewer-Country-Region-Name", "CloudFront-Viewer-Latitude", 
-        "CloudFront-Viewer-Longitude", "CloudFront-Viewer-Time-Zone", "CloudFront-Viewer-Address", "User-Agent"
-      ]
-
-      cookies {
-        forward = "none"
-      }
-    }
+    origin_request_policy_id = aws_cloudfront_origin_request_policy.beta-test-songs-request-policy.id
+    cache_policy_id = aws_cloudfront_cache_policy.beta-test-songs-cache-policy.id
 
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
+  }
+  
+}
+
+resource "aws_cloudfront_cache_policy" "beta-test-songs-cache-policy" {
+  name    = "beta-test-songs-cache-policy"
+  comment     = "beta test songs cache policy"
+  min_ttl                = 0
+  default_ttl            = 3600
+  max_ttl                = 86400
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config {
+      cookie_behavior = "none"
+    }
+    headers_config {
+      header_behavior = "whitelist"
+      headers {
+        items = ["Origin", "Host"]
+      }
+    }
+    query_strings_config {
+      query_string_behavior = "all"
+    }
+  }
+}
+
+resource "aws_cloudfront_origin_request_policy" "beta-test-songs-request-policy" {
+  name    = "beta-test-songs-request-policy"
+  comment = "forward headers to origin"
+
+  cookies_config {
+    cookie_behavior = "none"
+  }
+
+  headers_config {
+    header_behavior = "whitelist"
+    headers {
+      items = [
+        "CloudFront-Is-Desktop-Viewer", "CloudFront-Is-Mobile-Viewer", "CloudFront-Is-Tablet-Viewer", 
+        "CloudFront-Viewer-City", "CloudFront-Viewer-Country-Region-Name", "CloudFront-Viewer-Country-Name", 
+        "CloudFront-Viewer-Time-Zone", "CloudFront-Viewer-Address", "User-Agent", "Distinct-Id"
+      ]
+    }
+  }
+
+  query_strings_config {
+    query_string_behavior = "all"
   }
 }
 

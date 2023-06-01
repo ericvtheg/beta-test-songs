@@ -41,14 +41,13 @@ export default function App() {
     }
 
     let firstVisit = false;
-    
-    let btsUuid = localStorage.getItem('bts_uuid');
-    if (!btsUuid){
-      btsUuid = uuidv4();
-      localStorage.setItem('bts_uuid', btsUuid);
+    let distinctId = localStorage.getItem('distinct_id');
+    if (!distinctId){
+      distinctId = uuidv4();
+      localStorage.setItem('distinct_id', distinctId);
       firstVisit = true;
     }
-    axios.defaults.headers.common['BtsUuid'] = btsUuid;
+    axios.defaults.headers.common['Distinct-Id'] = distinctId;
 
     const trackVisit = async (firstVisit: boolean) => {
       try{

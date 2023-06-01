@@ -6,11 +6,10 @@ export interface IRequestAnalytics {
   $browser: ReturnType<typeof parseBrowser>;
   $browser_version: ReturnType<typeof parseBrowserVersion>;
   $ip: string;
-  $longitude: string;
-  $latitude: string;
   $city: string;
   $country: string;
-  timezone: string;
+  $timezone: string;
+  $state: string;
   distinct_id: string;
 }
 
@@ -20,14 +19,12 @@ export const Analytics = createParamDecorator(
     const { headers } = req;
     const userAgent = headers['user-agent'] ?? '';
 
-    console.log('headers', headers);
-
     const coalesceDevice = () => {
-      if (headers['cloudfront-is-desktop-viewer'] === true) {
+      if (headers['cloudfront-is-desktop-viewer'] === 'true') {
         return 'Desktop';
-      } else if (headers['cloudfront-is-mobile-viewer'] === true) {
+      } else if (headers['cloudfront-is-mobile-viewer'] === 'true') {
         return 'Mobile';
-      } else if (headers['cloudfront-is-tablet-viewer'] === true) {
+      } else if (headers['cloudfront-is-tablet-viewer'] === 'true') {
         return 'Tablet';
       }
       return null;
@@ -39,12 +36,11 @@ export const Analytics = createParamDecorator(
       $browser: parseBrowser(userAgent),
       $browser_version: parseBrowserVersion(userAgent),
       $ip: headers['cloudfront-viewer-address']?.split(':')[0],
-      $longitude: headers['cloudfront-viewer-longitude'],
-      $latitude: headers['cloudfront-viewer-latitude'],
       $city: headers['cloudfront-viewer-city'],
-      $country: headers['cloudfront-viewer-country-region-name'],
-      timezone: headers['cloudfront-viewer-time-zone'],
-      distinct_id: headers['btsuuid'],
+      $state: headers['cloudfront-viewer-country-region-name'],
+      $country: headers['cloudfront-viewer-country-name'],
+      $timezone: headers['cloudfront-viewer-time-zone'],
+      distinct_id: headers['distinct-id'],
     };
   },
 );
