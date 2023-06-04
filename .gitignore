@@ -99,3 +99,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# VST Plugins
+plugins/**/Builds
+plugins/**/JuceLibraryCode
