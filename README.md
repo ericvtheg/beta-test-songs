@@ -1,8 +1,10 @@
 # BetaTestSongs.com
 
+Check out my [blog post](https://www.ericventor.com/posts/beta-test-songs) on this service!
+
 A webapp built for EDM producers to anonymously share their tracks and get feedback. 
 
-Learn more about this service and what I learned by checking out my [blog post](https://www.ericventor.com/posts/beta-test-songs).
+
 
 ## Architecture Diagram
 
