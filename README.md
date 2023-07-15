@@ -1,4 +1,4 @@
-# BetaTestSongs.com
+# [BetaTestSongs.com](https://betatestsongs.com)
 
 Check out my [blog post](https://www.ericventor.com/posts/beta-test-songs) on this service!
 
